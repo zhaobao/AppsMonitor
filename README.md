@@ -26,6 +26,7 @@ This app can:
 
 ## or Download
 
+[Release](https://github.com/zhaobao/AppsTimeline/releases/tag/v1.0.0)
 
 ## Notes
 
