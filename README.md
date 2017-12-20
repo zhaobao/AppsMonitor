@@ -26,7 +26,8 @@ This app can:
 
 ## or Download
 
-[Release](https://github.com/zhaobao/AppsTimeline/releases/tag/v1.0.0)
+[Release](https://github.com/zhaobao/AppsTimeline/releases/tag/v1.0.0)  
+[GooglePlay](https://play.google.com/store/apps/details?id=timeline.lizimumu.com.t)
 
 ## Notes
 
