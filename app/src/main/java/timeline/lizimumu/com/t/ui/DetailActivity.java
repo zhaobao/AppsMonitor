@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -200,16 +201,10 @@ public class DetailActivity extends AppCompatActivity {
         protected void onPostExecute(List<AppItem> appItems) {
             if (mContext.get() != null) {
                 long duration = 0;
-                long times = 0;
                 for (AppItem item : appItems) {
                     duration += item.mUsageTime;
-                    if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                        if (item.mUsageTime > AppConst.USAGE_TIME_MIX) {
-                            times++;
-                        }
-                    }
                 }
-                mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), times));
+                mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), appItems.get(appItems.size() - 1).mCount));
                 mAdapter.setData(appItems);
             }
         }

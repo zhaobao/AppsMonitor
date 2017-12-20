@@ -6,5 +6,5 @@ package timeline.lizimumu.com.t;
  */
 
 public final class AppConst {
-    public static final long USAGE_TIME_MIX = 10000;
+    public static final long USAGE_TIME_MIX = 5000;
 }

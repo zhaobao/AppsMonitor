@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -48,31 +49,43 @@ public class DataManager {
         List<AppItem> items = new ArrayList<>();
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
+
             long endTime = System.currentTimeMillis();
             long startTime = AppUtil.startOfDay(endTime);
             UsageEvents events = manager.queryEvents(startTime, endTime);
             UsageEvents.Event event = new UsageEvents.Event();
-            long duration = 0;
-            long offset = 0;
+
+            AppItem item = new AppItem();
+            item.mPackageName = target;
+            item.mName = AppUtil.parsePackageName(context.getPackageManager(), target);
+
+            long start = 0;
             while (events.hasNextEvent()) {
                 events.getNextEvent(event);
-                String packageName = event.getPackageName();
-                if (target.equals(packageName)) {
-                    AppItem item = new AppItem();
-                    item.mPackageName = event.getPackageName();
-                    item.mEventType = event.getEventType();
-                    item.mEventTime = event.getTimeStamp();
-                    if (event.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                        offset = item.mEventTime;
-                        item.mUsageTime = 0;
-                    } else if (event.getEventType() == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                        if (offset > 0) {
-                            duration = item.mEventTime - offset;
-                            offset = 0;
+                String currentPackage = event.getPackageName();
+                int eventType = event.getEventType();
+                long eventTime = event.getTimeStamp();
+                if (currentPackage.equals(target)) {
+                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) { // 事件开始
+                        if (start == 0) {
+                            start = eventTime;
+                            item.mEventTime = eventTime;
+                            item.mEventType = eventType;
+                            item.mUsageTime = 0;
+                            items.add(item.copy());
                         }
-                        item.mUsageTime = duration;
                     }
-                    items.add(item);
+                } else { // 事件结束
+                    if (start > 0) {
+                        item.mUsageTime = eventTime - start;
+                        if (item.mUsageTime > AppConst.USAGE_TIME_MIX) { // 本次使用大于5秒
+                            item.mCount++;
+                        }
+                        item.mEventTime = eventTime;
+                        item.mEventType = UsageEvents.Event.MOVE_TO_BACKGROUND;
+                        items.add(item.copy());
+                        start = 0;
+                    }
                 }
             }
         }
@@ -81,80 +94,73 @@ public class DataManager {
 
     public List<AppItem> getApps(Context context, int sort) {
 
-        long start_time = System.currentTimeMillis();
-
         List<AppItem> items = new ArrayList<>();
-        List<IgnoreItem> ignoreItems = DbExecutor.getInstance().getAllItems();
-        Map<String, Long> offsets = new HashMap<>();
+        List<AppItem> newList = new ArrayList<>();
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-        boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
-        boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
-        PackageManager packageManager = context.getPackageManager();
         if (manager != null) {
+            // 缓存变量
+            String prevPackage = "";
+            Map<String, Long> startPoints = new HashMap<>();
+            // 获取事件
             long endTime = System.currentTimeMillis();
             long startTime = AppUtil.startOfDay(endTime);
             UsageEvents events = manager.queryEvents(startTime, endTime);
             UsageEvents.Event event = new UsageEvents.Event();
             while (events.hasNextEvent()) {
-                boolean exists = true;
+                // 解析时间
                 events.getNextEvent(event);
-                String packageName = event.getPackageName();
-                AppItem item = getItem(items, packageName);
-                if (item == null) {
-                    exists = false;
-                    item = new AppItem();
-                    item.mPackageName = event.getPackageName();
-                    boolean installed;
-                    if (!mCacheData.containsKey(item.mPackageName)) {
-                        item.mName = AppUtil.parsePackageName(packageManager, item.mPackageName);
-                        item.mIsSystem = AppUtil.isSystemApp(packageManager, item.mPackageName);
-                        installed = AppUtil.isInstalled(packageManager, item.mPackageName);
-                        Map<String, Object> innerMap = new HashMap<>();
-                        innerMap.put("name", item.mName);
-                        innerMap.put("is_system", item.mIsSystem);
-                        innerMap.put("installed", installed);
-                        mCacheData.put(item.mPackageName, innerMap);
-                    } else {
-                        item.mName = (String) mCacheData.get(item.mPackageName).get("name");
-                        item.mIsSystem = (boolean) mCacheData.get(item.mPackageName).get("is_system");
-                        installed = (boolean) mCacheData.get(item.mPackageName).get("installed");
+                int eventType = event.getEventType();
+                long eventTime = event.getTimeStamp();
+                String eventPackage = event.getPackageName();
+                // 开始点设置
+                if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                    // 获取bean
+                    AppItem item = containItem(items, eventPackage);
+                    if (item == null) {
+                        item = new AppItem();
+                        item.mPackageName = eventPackage;
+                        items.add(item);
                     }
-                    if (hideSystem && item.mIsSystem) {
-                        continue;
-                    }
-                    if (hideUninstall && !installed) {
-                        continue;
+                    if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == 0) {
+                        startPoints.put(eventPackage, eventTime);
                     }
                 }
-                item.mEventTime = event.getTimeStamp();
-                item.mEventType = event.getEventType();
-                if (item.mEventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                    offsets.put(item.mPackageName, item.mEventTime);
-                } else if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                    if (offsets.containsKey(item.mPackageName)) {
-                        long offset = offsets.get(item.mPackageName);
-                        if (offset > 0) {
-                            item.mUsageTime = item.mUsageTime + (item.mEventTime - offset);
-                            offsets.put(item.mPackageName, 0L);
-                            if (item.mEventTime - offset > AppConst.USAGE_TIME_MIX) item.mCount++;
+                // 计算时间和次数 事件应该是连续的
+                if (TextUtils.isEmpty(prevPackage)) prevPackage = eventPackage;
+                if (!prevPackage.equals(eventPackage)) { // 包名有变化
+                    if (startPoints.containsKey(prevPackage) && startPoints.get(prevPackage) > 0) {
+                        // 计算时间
+                        long start = startPoints.get(prevPackage);
+                        AppItem prevItem = containItem(items, prevPackage);
+                        if (prevItem != null) {
+                            prevItem.mEventTime = eventTime;
+                            prevItem.mUsageTime += eventTime - start;
+                            if (prevItem.mUsageTime > AppConst.USAGE_TIME_MIX) {
+                                prevItem.mCount++;
+                            }
+                        }
+                        // 重置
+                        startPoints.put(prevPackage, 0L);
+                    }
+                    prevPackage = eventPackage;
+                    // 开始点设置
+                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                        // 获取bean
+                        AppItem item2 = containItem(items, eventPackage);
+                        if (item2 == null) {
+                            item2 = new AppItem();
+                            item2.mPackageName = eventPackage;
+                            items.add(item2);
+                        }
+                        if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == 0) {
+                            startPoints.put(eventPackage, eventTime);
                         }
                     }
                 }
-                if (!exists && !inIgnoreList(ignoreItems, item.mPackageName)) {
-                    items.add(item);
-                }
             }
         }
-
-        long end_time = System.currentTimeMillis();
-        Log.d(">>>>>>>|||||", String.valueOf((end_time - start_time) / 1000));
-
         // 按照使用时长排序
         if (items.size() > 0) {
-            for (AppItem item : items) {
-                Log.d(">>>>>>||||||", item.toString());
-            }
-
             if (sort == 0) {
                 Collections.sort(items, new Comparator<AppItem>() {
                     @Override
@@ -177,13 +183,29 @@ public class DataManager {
                     }
                 });
             }
-        }
 
-        offsets.clear();
-        return items;
+            boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
+            boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
+            List<IgnoreItem> ignoreItems = DbExecutor.getInstance().getAllItems();
+            PackageManager packageManager = context.getPackageManager();
+            for (AppItem item : items) {
+                if (hideSystem && AppUtil.isSystemApp(packageManager, item.mPackageName)) {
+                    continue;
+                }
+                if (hideUninstall && !AppUtil.isInstalled(packageManager, item.mPackageName)) {
+                    continue;
+                }
+                if (inIgnoreList(ignoreItems, item.mPackageName)) {
+                    continue;
+                }
+                item.mName = AppUtil.parsePackageName(packageManager, item.mPackageName);
+                newList.add(item);
+            }
+        }
+        return newList;
     }
 
-    private AppItem getItem(List<AppItem> items, String packageName) {
+    private AppItem containItem(List<AppItem> items, String packageName) {
         for (AppItem item : items) {
             if (item.mPackageName.equals(packageName)) return item;
         }
