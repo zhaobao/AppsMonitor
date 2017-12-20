@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/sort" android:title="@string/sort" app:showAsAction="always" android:icon="@drawable/ic_sort_white"/>
+    <item android:id="@+id/refresh" android:title="@string/refresh" app:showAsAction="always" android:icon="@drawable/ic_cached_white"/>
+    <item android:id="@+id/settings" android:title="@string/settings" app:showAsAction="always" android:icon="@drawable/ic_settings_white"/>
+</menu>

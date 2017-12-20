@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="timeline.lizimumu.com.t.ui.DetailActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_detail_header"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/icon"
+            android:layout_marginStart="16dp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toStartOf="@+id/open"
+            android:layout_marginEnd="16dp"
+            android:singleLine="true"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/name"
+            android:layout_marginTop="4dp" />
+
+        <Button
+            android:id="@+id/open"
+            android:background="@drawable/bg_button"
+            android:textColor="@android:color/white"
+            android:minHeight="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="@string/open" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

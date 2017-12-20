@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "timeline.lizimumu.com.t"
+        minSdkVersion 22
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.1.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore")
+            storePassword "app123456"
+            keyAlias "appkeystore"
+            keyPassword "app123456"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            debuggable false
+            jniDebuggable false
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "AppsTimeline-${defaultConfig.versionName}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.android.support:support-vector-drawable:27.0.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
