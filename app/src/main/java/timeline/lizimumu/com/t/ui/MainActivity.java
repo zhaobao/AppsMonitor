@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (mManager.hasPermission(this)) {
+            mSwipe.setEnabled(true);
             process();
             mSwitch.setVisibility(View.GONE);
         }
@@ -321,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
             for (AppItem item : appItems) {
                 if (item.mUsageTime <= 0) continue;
                 mTotal += item.mUsageTime;
+                Log.d("********", item.toString());
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
             mSwipe.setRefreshing(false);

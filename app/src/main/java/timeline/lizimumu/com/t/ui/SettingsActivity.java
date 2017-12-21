@@ -10,10 +10,10 @@ import android.widget.Switch;
 
 import java.util.Locale;
 
-import timeline.lizimumu.com.t.util.PreferenceManager;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
+import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         mSwitchUninstall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS) != b) {
+                if (PreferenceManager.getInstance().getUninstallSettings(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS) != b) {
                     PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS, b);
                     setResult(1);
                 }

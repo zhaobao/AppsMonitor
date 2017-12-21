@@ -30,12 +30,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import timeline.lizimumu.com.t.GlideApp;
+import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
-import timeline.lizimumu.com.t.GlideApp;
-import timeline.lizimumu.com.t.R;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -141,9 +141,9 @@ public class DetailActivity extends AppCompatActivity {
             String time = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
             String desc;
             if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                desc = String.format(Locale.getDefault(),"%s %s %s", time, formatEventType(item.mEventType), AppUtil.formatMilliSeconds(item.mUsageTime));
+                desc = String.format(Locale.getDefault(), "%s %s %s", time, formatEventType(item.mEventType), AppUtil.formatMilliSeconds(item.mUsageTime));
             } else {
-                desc = String.format(Locale.getDefault(),"%s %s", time, formatEventType(item.mEventType));
+                desc = String.format(Locale.getDefault(), "%s %s", time, formatEventType(item.mEventType));
             }
             holder.mEvent.setText(desc);
         }

@@ -12,9 +12,9 @@ public class AppItem {
     public String mPackageName;
     public long mEventTime;
     public long mUsageTime;
-    boolean mIsSystem;
     public int mEventType;
     public int mCount;
+    private boolean mIsSystem;
 
     @Override
     public String toString() {
@@ -23,7 +23,7 @@ public class AppItem {
                 mName, mPackageName, mEventTime, mUsageTime, mEventType, mIsSystem, mCount);
     }
 
-    public AppItem copy() {
+    AppItem copy() {
         AppItem newItem = new AppItem();
         newItem.mName = this.mName;
         newItem.mPackageName = this.mPackageName;

@@ -145,7 +145,7 @@ public class DataManager {
                         if (prevItem != null) {
                             prevItem.mEventTime = lastEndEvent.timeStamp;
                             long thisTime = lastEndEvent.timeStamp - start;
-                            if (thisTime <= 0)  thisTime = 0;
+                            if (thisTime <= 0) thisTime = 0;
                             prevItem.mUsageTime += thisTime;
                             if (thisTime > AppConst.USAGE_TIME_MIX) {
                                 prevItem.mCount++;

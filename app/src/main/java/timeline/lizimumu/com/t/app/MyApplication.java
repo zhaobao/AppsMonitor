@@ -3,6 +3,9 @@ package timeline.lizimumu.com.t.app;
 import android.app.Application;
 import android.content.Intent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.database.DbExecutor;
@@ -22,9 +25,23 @@ public class MyApplication extends Application {
         PreferenceManager.init(this);
         getApplicationContext().startService(new Intent(getApplicationContext(), AppService.class));
         DbExecutor.init(getApplicationContext());
-        AppItem item = new AppItem();
-        item.mPackageName = BuildConfig.APPLICATION_ID;
-        item.mEventTime = System.currentTimeMillis();
-        DbExecutor.getInstance().insertItem(item);
+        insertDefault();
+    }
+
+    private void insertDefault() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<String> mDefaults = new ArrayList<>();
+                mDefaults.add("com.android.settings");
+                mDefaults.add(BuildConfig.APPLICATION_ID);
+                for (String packageName : mDefaults) {
+                    AppItem item = new AppItem();
+                    item.mPackageName = packageName;
+                    item.mEventTime = System.currentTimeMillis();
+                    DbExecutor.getInstance().insertItem(item);
+                }
+            }
+        }).run();
     }
 }

@@ -18,7 +18,8 @@ public class PreferenceManager {
     private static PreferenceManager mManager;
     private static SharedPreferences mShare;
 
-    private PreferenceManager(){}
+    private PreferenceManager() {
+    }
 
     public static void init(Context context) {
         mManager = new PreferenceManager();
@@ -38,13 +39,14 @@ public class PreferenceManager {
     }
 
     public boolean getBoolean(String key) {
-        if (key.equals(PREF_SETTINGS_HIDE_UNINSTALL_APPS)) {
-            return mShare.getBoolean(key, true);
-        }
         return mShare.getBoolean(key, false);
     }
 
     public int getInt(String key) {
         return mShare.getInt(key, 0);
+    }
+
+    public boolean getUninstallSettings(String key) {
+        return mShare.getBoolean(key, true);
     }
 }

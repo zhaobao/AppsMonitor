@@ -1,9 +1,9 @@
 package timeline.lizimumu.com.t.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import timeline.lizimumu.com.t.R;
 
