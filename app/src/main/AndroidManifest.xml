@@ -14,39 +14,41 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" android:launchMode="singleTask"/>
 
-        <!-- <service android:name=".service.AppService" /> -->
+        <service android:name=".service.AppService" />
 
         <activity
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="timeline.lizimumu.com.t.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".ui.DetailActivity"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="timeline.lizimumu.com.t.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".ui.IgnoreActivity"
             android:parentActivityName=".ui.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="timeline.lizimumu.com.t.ui.SettingsActivity" />
+                android:value=".ui.SettingsActivity" />
         </activity>
         <activity
             android:name=".ui.AboutActivity"
             android:parentActivityName=".ui.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="timeline.lizimumu.com.t.ui.SettingsActivity" />
+                android:value=".ui.SettingsActivity" />
         </activity>
-        <activity android:name=".ui.SplashActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".ui.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

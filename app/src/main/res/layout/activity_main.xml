@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="timeline.lizimumu.com.t.MainActivity">
+    tools:context="timeline.lizimumu.com.t.timeline.lizimumu.com.app.MainActivity">
 
     <LinearLayout
         android:id="@+id/enable"

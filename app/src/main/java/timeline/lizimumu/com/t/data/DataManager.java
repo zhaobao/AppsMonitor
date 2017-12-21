@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +28,6 @@ import timeline.lizimumu.com.t.util.PreferenceManager;
  */
 
 public class DataManager {
-
-    private static Map<String, Map<String, Object>> mCacheData = new HashMap<>();
 
     public void requestPermission(Context context) {
         context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
@@ -190,6 +187,9 @@ public class DataManager {
             List<IgnoreItem> ignoreItems = DbExecutor.getInstance().getAllItems();
             PackageManager packageManager = context.getPackageManager();
             for (AppItem item : items) {
+                if (!AppUtil.openable(packageManager, item.mPackageName)) {
+                    continue;
+                }
                 if (hideSystem && AppUtil.isSystemApp(packageManager, item.mPackageName)) {
                     continue;
                 }

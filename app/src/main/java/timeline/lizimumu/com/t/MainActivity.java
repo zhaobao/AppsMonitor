@@ -5,15 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +21,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
-import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +36,7 @@ import java.util.Locale;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
+import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.ui.DetailActivity;
 import timeline.lizimumu.com.t.ui.SettingsActivity;
 import timeline.lizimumu.com.t.util.AppUtil;
@@ -54,24 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter mAdapter;
     private AlertDialog mDialog;
     private SwipeRefreshLayout mSwipe;
-
-    private Handler mHandler = new Handler();
-    private Runnable mRepeatCheckTask = new Runnable() {
-        @Override
-        public void run() {
-            if (!mManager.hasPermission(getApplicationContext())) {
-                long CHECK_INTERVAL = 400;
-                mHandler.postDelayed(this, CHECK_INTERVAL);
-            } else {
-                mHandler.removeCallbacks(mRepeatCheckTask);
-                PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_MONITOR_ON, true);
-                Toast.makeText(MainActivity.this, R.string.grant_success, Toast.LENGTH_SHORT).show();
-                mSwitch.setVisibility(View.GONE);
-                mSwipe.setEnabled(true);
-                process();
-            }
-        }
-    };
+    private long mTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
-                        mManager.requestPermission(getApplicationContext());
-                        mHandler.post(mRepeatCheckTask);
-                        Toast.makeText(MainActivity.this, R.string.toast_permission, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, AppService.class);
+                        intent.putExtra(AppService.SERVICE_ACTION, AppService.SERVICE_ACTION_CHECK);
+                        startService(intent);
                     }
                 }
             });
@@ -132,6 +112,23 @@ public class MainActivity extends AppCompatActivity {
                 process();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!mManager.hasPermission(getApplicationContext())) {
+            mSwitch.setChecked(false);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (mManager.hasPermission(this)) {
+            process();
+            mSwitch.setVisibility(View.GONE);
+        }
     }
 
     private void process() {
@@ -203,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacks(mRepeatCheckTask);
         if (mDialog != null) mDialog.dismiss();
     }
 
@@ -246,10 +242,15 @@ public class MainActivity extends AppCompatActivity {
             holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mUsageTime));
             holder.mTime.setText(String.format(Locale.getDefault(),
                     "%s · %d %s",
-                    new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
+                    new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
                     item.mCount,
                     getResources().getString(R.string.times_only))
             );
+            if (mTotal > 0) {
+                holder.mProgress.setProgress((int) (item.mUsageTime * 100 / mTotal));
+            } else {
+                holder.mProgress.setProgress(0);
+            }
             GlideApp.with(MainActivity.this)
                     .load(AppUtil.getPackageIcon(MainActivity.this, item.mPackageName))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
             private TextView mUsage;
             private TextView mTime;
             private ImageView mIcon;
+            private ProgressBar mProgress;
 
             MyViewHolder(View itemView) {
                 super(itemView);
@@ -276,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
                 mUsage = itemView.findViewById(R.id.app_usage);
                 mTime = itemView.findViewById(R.id.app_time);
                 mIcon = itemView.findViewById(R.id.app_image);
+                mProgress = itemView.findViewById(R.id.progressBar);
                 itemView.setOnCreateContextMenuListener(this);
             }
 
@@ -313,15 +316,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<AppItem> appItems) {
-            mAdapter.updateData(appItems);
             mList.setVisibility(View.VISIBLE);
-            long total = 0;
+            mTotal = 0;
             for (AppItem item : appItems) {
                 if (item.mUsageTime <= 0) continue;
-                total += item.mUsageTime;
+                mTotal += item.mUsageTime;
             }
-            mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(total)));
+            mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
             mSwipe.setRefreshing(false);
+            mAdapter.updateData(appItems);
         }
     }
 }

@@ -6,15 +6,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ShareActionProvider;
 import android.widget.Switch;
 
 import java.util.Locale;
 
+import timeline.lizimumu.com.t.util.PreferenceManager;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
 

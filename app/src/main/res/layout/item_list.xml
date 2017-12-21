@@ -43,4 +43,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:progress="40"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_marginTop="4dp"
+        android:progressDrawable="@drawable/bg_progress"
+        android:layout_alignStart="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/app_time"
+        android:minHeight="4dp" />
+
 </RelativeLayout>

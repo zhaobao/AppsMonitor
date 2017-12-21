@@ -1,5 +1,4 @@
 package timeline.lizimumu.com.t.util;
-
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -71,6 +70,10 @@ public final class AppUtil {
             e.printStackTrace();
         }
         return applicationInfo != null;
+    }
+
+    public static boolean openable(PackageManager packageManager, String packageName) {
+        return packageManager.getLaunchIntentForPackage(packageName) != null;
     }
 
     public static long startOfDay(long time) {

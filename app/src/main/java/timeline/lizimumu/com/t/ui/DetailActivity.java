@@ -3,17 +3,14 @@ package timeline.lizimumu.com.t.ui;
 import android.annotation.SuppressLint;
 import android.app.usage.UsageEvents;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,15 +30,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import timeline.lizimumu.com.t.AppConst;
-import timeline.lizimumu.com.t.GlideApp;
-import timeline.lizimumu.com.t.MainActivity;
-import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
-import timeline.lizimumu.com.t.util.PreferenceManager;
+import timeline.lizimumu.com.t.GlideApp;
+import timeline.lizimumu.com.t.R;
 
 public class DetailActivity extends AppCompatActivity {
 
