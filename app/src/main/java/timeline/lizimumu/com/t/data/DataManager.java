@@ -59,14 +59,18 @@ public class DataManager {
             item.mPackageName = target;
             item.mName = AppUtil.parsePackageName(context.getPackageManager(), target);
 
+            // 缓存
+            ClonedEvent prevEndEvent = null;
             long start = 0;
+
             while (events.hasNextEvent()) {
                 events.getNextEvent(event);
                 String currentPackage = event.getPackageName();
                 int eventType = event.getEventType();
                 long eventTime = event.getTimeStamp();
-                if (currentPackage.equals(target)) {
-                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) { // 事件开始
+                if (currentPackage.equals(target)) { // 本次交互开始
+                    // 记录第一次开始时间
+                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
                         if (start == 0) {
                             start = eventTime;
                             item.mEventTime = eventTime;
@@ -74,15 +78,17 @@ public class DataManager {
                             item.mUsageTime = 0;
                             items.add(item.copy());
                         }
+                    } else if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) { // 结束事件
+                        // BUG 系统是不断的改event的，那就不能这样记录了
+                        prevEndEvent = new ClonedEvent(event);
                     }
-                } else { // 事件结束
-                    if (start > 0) {
-                        item.mUsageTime = eventTime - start;
-                        if (item.mUsageTime > AppConst.USAGE_TIME_MIX) { // 本次使用大于5秒
-                            item.mCount++;
-                        }
-                        item.mEventTime = eventTime;
-                        item.mEventType = UsageEvents.Event.MOVE_TO_BACKGROUND;
+                } else {
+                    // 记录最后一次结束事件
+                    if (prevEndEvent != null && start > 0) {
+                        item.mEventTime = prevEndEvent.timeStamp;
+                        item.mEventType = prevEndEvent.eventType;
+                        item.mUsageTime = prevEndEvent.timeStamp - start;
+                        if (item.mUsageTime > AppConst.USAGE_TIME_MIX) item.mCount++;
                         items.add(item.copy());
                         start = 0;
                     }
@@ -101,6 +107,7 @@ public class DataManager {
             // 缓存变量
             String prevPackage = "";
             Map<String, Long> startPoints = new HashMap<>();
+            Map<String, ClonedEvent> endPoints = new HashMap<>();
             // 获取事件
             long endTime = System.currentTimeMillis();
             long startTime = AppUtil.startOfDay(endTime);
@@ -114,7 +121,6 @@ public class DataManager {
                 String eventPackage = event.getPackageName();
                 // 开始点设置
                 if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                    // 获取bean
                     AppItem item = containItem(items, eventPackage);
                     if (item == null) {
                         item = new AppItem();
@@ -125,37 +131,30 @@ public class DataManager {
                         startPoints.put(eventPackage, eventTime);
                     }
                 }
+                // 记录结束时间点
+                if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+                    endPoints.put(eventPackage, new ClonedEvent(event));
+                }
                 // 计算时间和次数 事件应该是连续的
                 if (TextUtils.isEmpty(prevPackage)) prevPackage = eventPackage;
                 if (!prevPackage.equals(eventPackage)) { // 包名有变化
-                    if (startPoints.containsKey(prevPackage) && startPoints.get(prevPackage) > 0) {
-                        // 计算时间
+                    if (startPoints.containsKey(prevPackage)
+                            && endPoints.containsKey(prevPackage)
+                            && startPoints.get(prevPackage) > 0) {
+                        ClonedEvent lastEndEvent = endPoints.get(prevPackage);
                         long start = startPoints.get(prevPackage);
                         AppItem prevItem = containItem(items, prevPackage);
                         if (prevItem != null) {
-                            prevItem.mEventTime = eventTime;
-                            prevItem.mUsageTime += eventTime - start;
-                            if (prevItem.mUsageTime > AppConst.USAGE_TIME_MIX) {
+                            prevItem.mEventTime = lastEndEvent.timeStamp;
+                            long thisTime = lastEndEvent.timeStamp - start;
+                            prevItem.mUsageTime += thisTime;
+                            if (thisTime > AppConst.USAGE_TIME_MIX) {
                                 prevItem.mCount++;
                             }
                         }
-                        // 重置
                         startPoints.put(prevPackage, 0L);
                     }
                     prevPackage = eventPackage;
-                    // 开始点设置
-                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                        // 获取bean
-                        AppItem item2 = containItem(items, eventPackage);
-                        if (item2 == null) {
-                            item2 = new AppItem();
-                            item2.mPackageName = eventPackage;
-                            items.add(item2);
-                        }
-                        if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == 0) {
-                            startPoints.put(eventPackage, eventTime);
-                        }
-                    }
                 }
             }
         }
@@ -217,5 +216,20 @@ public class DataManager {
             if (item.mPackageName.equals(packageName)) return true;
         }
         return false;
+    }
+
+    class ClonedEvent {
+
+        String packageName;
+        String eventClass;
+        long timeStamp;
+        int eventType;
+
+        ClonedEvent(UsageEvents.Event event) {
+            packageName = event.getPackageName();
+            eventClass = event.getClassName();
+            timeStamp = event.getTimeStamp();
+            eventType = event.getEventType();
+        }
     }
 }
