@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t;
+package timeline.lizimumu.com.t.ui;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -33,12 +33,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import timeline.lizimumu.com.t.GlideApp;
+import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.service.AppService;
-import timeline.lizimumu.com.t.ui.DetailActivity;
-import timeline.lizimumu.com.t.ui.SettingsActivity;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 

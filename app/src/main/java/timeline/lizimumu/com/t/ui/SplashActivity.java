@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import timeline.lizimumu.com.t.MainActivity;
 import timeline.lizimumu.com.t.R;
 
 public class SplashActivity extends AppCompatActivity {

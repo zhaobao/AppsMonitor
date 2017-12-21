@@ -14,23 +14,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask" />
 
         <service android:name=".service.AppService" />
 
         <activity
             android:name=".ui.SettingsActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.DetailActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.IgnoreActivity"

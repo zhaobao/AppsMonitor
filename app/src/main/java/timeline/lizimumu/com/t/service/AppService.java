@@ -3,6 +3,7 @@ package timeline.lizimumu.com.t.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -10,7 +11,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.MainActivity;
+import timeline.lizimumu.com.t.ui.MainActivity;
 import timeline.lizimumu.com.t.R;
 
 public class AppService extends Service {
@@ -18,7 +19,7 @@ public class AppService extends Service {
     public static final String SERVICE_ACTION = "service_action";
     public static final String SERVICE_ACTION_CHECK = "service_action_check";
 
-    static final long CHECK_INTERVAL = 400;
+    static final long CHECK_INTERVAL = 1000;
 
     private DataManager mManager;
     private Context mContext;
@@ -70,7 +71,16 @@ public class AppService extends Service {
     }
 
     private void startIntervalCheck() {
-        Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_LONG).show();
+        new CountDownTimer(4000, 1000) {
+            @Override
+            public void onTick(long l) {
+                Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
         mManager.requestPermission(mContext);
         mHandler.post(mRepeatCheckTask);
     }
