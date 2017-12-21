@@ -12,12 +12,13 @@ This app can:
 
 ## Screen shortcut
 
-#### home & sort & ignore
+#### splash & home & sort & ignore
+![splash](images/splash.jpg)
 ![home](images/home.jpg)
 ![sort](images/sort.jpg)
 ![ignore](images/ignore.jpg)
-#### timeline & settings
-![timeline](images/timeline.jpg)
+#### settings
+![list](images/list.jpg)
 ![settings](images/settings.jpg)
 
 ## How to build
