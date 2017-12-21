@@ -163,14 +163,14 @@ public class DataManager {
                 Collections.sort(items, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
-                        return (int) (right.mEventTime - left.mEventTime);
+                        return (int) (right.mUsageTime - left.mUsageTime);
                     }
                 });
             } else if (sort == 1) {
                 Collections.sort(items, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
-                        return (int) (right.mUsageTime - left.mUsageTime);
+                        return (int) (right.mEventTime - left.mEventTime);
                     }
                 });
             } else {

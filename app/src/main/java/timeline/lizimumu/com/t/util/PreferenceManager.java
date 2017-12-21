@@ -12,7 +12,6 @@ public class PreferenceManager {
 
     public static final String PREF_SETTINGS_HIDE_SYSTEM_APPS = "hide_system_apps";
     public static final String PREF_SETTINGS_HIDE_UNINSTALL_APPS = "hide_uninstall_apps";
-    public static final String PREF_MONITOR_ON = "monitor_on";
     public static final String PREF_LIST_SORT = "sort_list";
     private static final String PREF_NAME = "preference_application";
 
@@ -41,9 +40,8 @@ public class PreferenceManager {
     public boolean getBoolean(String key) {
         if (key.equals(PREF_SETTINGS_HIDE_UNINSTALL_APPS)) {
             return mShare.getBoolean(key, true);
-        } else {
-            return mShare.getBoolean(key, false);
         }
+        return mShare.getBoolean(key, false);
     }
 
     public int getInt(String key) {

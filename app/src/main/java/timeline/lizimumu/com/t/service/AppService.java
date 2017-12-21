@@ -3,16 +3,15 @@ package timeline.lizimumu.com.t.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.ui.MainActivity;
-import timeline.lizimumu.com.t.R;
 
 public class AppService extends Service {
 
@@ -71,16 +70,7 @@ public class AppService extends Service {
     }
 
     private void startIntervalCheck() {
-        new CountDownTimer(4000, 1000) {
-            @Override
-            public void onTick(long l) {
-                Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        }.start();
+        Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_LONG).show();
         mManager.requestPermission(mContext);
         mHandler.post(mRepeatCheckTask);
     }

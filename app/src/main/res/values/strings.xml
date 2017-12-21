@@ -22,8 +22,8 @@
     <string name="ignore_success">Move to ignore list successfully</string>
 
     <string-array name="sort">
-        <item>Sort by last usage time</item>
         <item>Sort by total usage time</item>
+        <item>Sort by last usage time</item>
         <item>Sort by total usage count</item>
     </string-array>
 
