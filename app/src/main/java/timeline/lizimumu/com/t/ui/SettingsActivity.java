@@ -6,8 +6,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ShareActionProvider;
 import android.widget.Switch;
 
+import java.util.Locale;
+
+import timeline.lizimumu.com.t.AppConst;
+import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
@@ -67,6 +72,25 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(SettingsActivity.this, IgnoreActivity.class));
+            }
+        });
+
+        findViewById(R.id.group_about).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SettingsActivity.this, AboutActivity.class));
+            }
+        });
+
+        findViewById(R.id.group_share).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        String.format(Locale.getDefault(), getResources().getString(R.string.share_desc), AppConst.GP_DETAIL_PREFIX, BuildConfig.APPLICATION_ID));
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
             }
         });
 

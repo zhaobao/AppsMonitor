@@ -7,6 +7,8 @@
     <string name="notification_title">AppTimeline running</string>
     <string name="notification_message">monitoring your app usage</string>
 
+    <string name="about">About</string>
+    <string name="share">Like and share</string>
     <string name="sort">Sort</string>
     <string name="settings">Settings</string>
     <string name="detail">Details</string>
@@ -25,12 +27,17 @@
         <item>Sort by total usage count</item>
     </string-array>
 
-    <string name="grant_success">Grand successfully</string>
+    <string name="grant_success">Grand permission successfully</string>
+    <string name="toast_permission">Please find \"AppsTimeline\" and grant the permission</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="duration">Duration</string>
     <string name="times">[%1$s] [%2$d times]</string>
     <string name="times_only">times</string>
     <string name="total">Total usage %1$s</string>
+    <string name="feedback">feedback: zhishoumowen@gmail.com</string>
+    <string name="version">v %1$s</string>
+
+    <string name="share_desc">Hey check out this app, it\'s so cool, it can help checkout every app\'s time your spend on: %1$s%2$s</string>
 
 </resources>

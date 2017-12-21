@@ -5,12 +5,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private static long CHECK_INTERVAL = 400;
     private Switch mSwitch;
     private TextView mSwitchText;
-    private ProgressBar mProgress;
     private RecyclerView mList;
     private DataManager mManager;
     private MyAdapter mAdapter;
     private AlertDialog mDialog;
+    private SwipeRefreshLayout mSwipe;
 
     private Handler mHandler = new Handler();
     private Runnable mTask = new Runnable() {
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         mSwitch = findViewById(R.id.enable_switch);
         mSwitchText = findViewById(R.id.enable_text);
-        mProgress = findViewById(R.id.progress);
         mManager = new DataManager();
         mAdapter = new MyAdapter();
 
@@ -99,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mSwitchText.setText(R.string.enable_apps_monitor);
             mSwitch.setChecked(false);
-            mProgress.setVisibility(View.GONE);
         }
     }
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 if (b) {
                     if (!mManager.hasPermission(getApplicationContext())) {
                         mManager.requestPermission(getApplicationContext());
+                        Toast.makeText(MainActivity.this, R.string.toast_permission, Toast.LENGTH_LONG).show();
                         mHandler.postDelayed(mTask, CHECK_INTERVAL);
                     } else {
                         PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_MONITOR_ON, true);
@@ -127,11 +130,17 @@ public class MainActivity extends AppCompatActivity {
                 mSwitch.performClick();
             }
         });
+        mSwipe = findViewById(R.id.swipe_refresh);
+        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                process();
+            }
+        });
     }
 
     private void process() {
         if (mManager.hasPermission(getApplicationContext())) {
-            mProgress.setVisibility(View.VISIBLE);
             mList.setVisibility(View.INVISIBLE);
             new MyAsyncTask().execute(PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT));
         }
@@ -293,13 +302,18 @@ public class MainActivity extends AppCompatActivity {
     class MyAsyncTask extends AsyncTask<Integer, Void, List<AppItem>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mSwipe.setRefreshing(true);
+        }
+
+        @Override
         protected List<AppItem> doInBackground(Integer... integers) {
             return mManager.getApps(getApplicationContext(), integers[0]);
         }
 
         @Override
         protected void onPostExecute(List<AppItem> appItems) {
-            mProgress.setVisibility(View.GONE);
             mAdapter.updateData(appItems);
             mList.setVisibility(View.VISIBLE);
             long total = 0;
@@ -307,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
                 total += item.mUsageTime;
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(total)));
+            mSwipe.setRefreshing(false);
         }
     }
 }

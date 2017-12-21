@@ -4,23 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:text="@string/functions"
-        android:textSize="14sp"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <RelativeLayout
         android:id="@+id/group_system"
         android:background="@drawable/bg_detail_header"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:layout_height="56dp">
 
         <TextView
             android:textSize="16sp"
@@ -44,7 +34,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:layout_height="56dp">
 
         <TextView
             android:textSize="16sp"
@@ -79,5 +69,51 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/group_about"
+        android:background="@drawable/bg_detail_header"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:textSize="16sp"
+            android:text="@string/about"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/group_share"
+        android:background="@drawable/bg_detail_header"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:textSize="16sp"
+            android:text="@string/share"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="231dp"
+            android:paddingBottom="8dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:text="@string/functions"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

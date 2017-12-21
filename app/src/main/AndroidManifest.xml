@@ -38,7 +38,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="timeline.lizimumu.com.t.MainActivity" />
         </activity>
-        <activity android:name=".ui.IgnoreActivity" android:parentActivityName=".ui.SettingsActivity">
+        <activity
+            android:name=".ui.IgnoreActivity"
+            android:parentActivityName=".ui.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="timeline.lizimumu.com.t.ui.SettingsActivity" />
+        </activity>
+        <activity android:name=".ui.AboutActivity" android:parentActivityName=".ui.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="timeline.lizimumu.com.t.ui.SettingsActivity" />
