@@ -57,15 +57,17 @@ public class MainActivity extends AppCompatActivity {
     private SwipeRefreshLayout mSwipe;
 
     private Handler mHandler = new Handler();
-    private Runnable mTask = new Runnable() {
+    private Runnable mRepeatCheckTask = new Runnable() {
         @Override
         public void run() {
             if (!mManager.hasPermission(getApplicationContext())) {
                 mHandler.postDelayed(this, CHECK_INTERVAL);
             } else {
-                mHandler.removeCallbacks(mTask);
+                mHandler.removeCallbacks(mRepeatCheckTask);
                 PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_MONITOR_ON, true);
                 Toast.makeText(MainActivity.this, R.string.grant_success, Toast.LENGTH_SHORT).show();
+                mSwitch.setVisibility(View.GONE);
+                mSwipe.setEnabled(true);
                 process();
             }
         }
@@ -85,52 +87,45 @@ public class MainActivity extends AppCompatActivity {
         mList.setLayoutManager(new LinearLayoutManager(this));
         mList.setAdapter(mAdapter);
 
-        initHeader();
+        initLayout();
         initEvents();
 
-        process();
+        if (mManager.hasPermission(getApplicationContext())) process();
     }
 
-    private void initHeader() {
+    private void initLayout() {
+        mSwipe = findViewById(R.id.swipe_refresh);
         if (mManager.hasPermission(getApplicationContext())) {
             mSwitchText.setText(R.string.enable_apps_monitoring);
-            if (PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_MONITOR_ON)) {
-                mSwitch.setChecked(true);
-            } else {
-                mSwitch.setChecked(false);
-            }
+            mSwitch.setVisibility(View.GONE);
+            mSwipe.setEnabled(true);
         } else {
             mSwitchText.setText(R.string.enable_apps_monitor);
+            mSwitch.setVisibility(View.VISIBLE);
             mSwitch.setChecked(false);
+            mSwipe.setEnabled(false);
         }
     }
 
     private void initEvents() {
-        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    if (!mManager.hasPermission(getApplicationContext())) {
+        if (!mManager.hasPermission(getApplicationContext())) {
+            mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
                         mManager.requestPermission(getApplicationContext());
+                        mHandler.post(mRepeatCheckTask);
                         Toast.makeText(MainActivity.this, R.string.toast_permission, Toast.LENGTH_LONG).show();
-                        mHandler.postDelayed(mTask, CHECK_INTERVAL);
-                    } else {
-                        PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_MONITOR_ON, true);
-                        process();
                     }
-                } else {
-                    PreferenceManager.getInstance().putBoolean(PreferenceManager.PREF_MONITOR_ON, false);
-                    mAdapter.clear();
                 }
-            }
-        });
-        findViewById(R.id.enable).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSwitch.performClick();
-            }
-        });
-        mSwipe = findViewById(R.id.swipe_refresh);
+            });
+            findViewById(R.id.enable).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSwitch.performClick();
+                }
+            });
+        }
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -177,19 +172,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
                 return true;
             case R.id.sort:
-                mDialog = new AlertDialog.Builder(this)
-                        .setTitle(R.string.sort)
-                        .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-                                process();
-                                mDialog.dismiss();
-                            }
-                        })
-                        .create();
-                mDialog.show();
-                return true;
+                if (mManager.hasPermission(getApplicationContext())) {
+                    mDialog = new AlertDialog.Builder(this)
+                            .setTitle(R.string.sort)
+                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
+                                    process();
+                                    mDialog.dismiss();
+                                }
+                            })
+                            .create();
+                    mDialog.show();
+                    return true;
+                } else {
+                    return false;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacks(mTask);
+        mHandler.removeCallbacks(mRepeatCheckTask);
         if (mDialog != null) mDialog.dismiss();
     }
 
