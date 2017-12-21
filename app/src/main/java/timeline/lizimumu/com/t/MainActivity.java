@@ -47,7 +47,6 @@ import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static long CHECK_INTERVAL = 400;
     private Switch mSwitch;
     private TextView mSwitchText;
     private RecyclerView mList;
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (!mManager.hasPermission(getApplicationContext())) {
+                long CHECK_INTERVAL = 400;
                 mHandler.postDelayed(this, CHECK_INTERVAL);
             } else {
                 mHandler.removeCallbacks(mRepeatCheckTask);
@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
             mList.setVisibility(View.VISIBLE);
             long total = 0;
             for (AppItem item : appItems) {
+                if (item.mUsageTime <= 0) continue;
                 total += item.mUsageTime;
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(total)));

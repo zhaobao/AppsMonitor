@@ -88,6 +88,7 @@ public class DataManager {
                         item.mEventTime = prevEndEvent.timeStamp;
                         item.mEventType = prevEndEvent.eventType;
                         item.mUsageTime = prevEndEvent.timeStamp - start;
+                        if (item.mUsageTime <= 0) item.mUsageTime = 0;
                         if (item.mUsageTime > AppConst.USAGE_TIME_MIX) item.mCount++;
                         items.add(item.copy());
                         start = 0;
@@ -147,6 +148,7 @@ public class DataManager {
                         if (prevItem != null) {
                             prevItem.mEventTime = lastEndEvent.timeStamp;
                             long thisTime = lastEndEvent.timeStamp - start;
+                            if (thisTime <= 0)  thisTime = 0;
                             prevItem.mUsageTime += thisTime;
                             if (thisTime > AppConst.USAGE_TIME_MIX) {
                                 prevItem.mCount++;
