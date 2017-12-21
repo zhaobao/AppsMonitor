@@ -6,7 +6,7 @@ android {
         applicationId "timeline.lizimumu.com.t"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 1
+        versionCode 4
         versionName "1.2.0"
     }
 
