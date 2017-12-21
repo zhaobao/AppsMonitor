@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,11 +143,18 @@ public class DetailActivity extends AppCompatActivity {
             String time = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
             String desc;
             if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+                holder.mLayout.setPadding(dpToPx(16), 0, dpToPx(16), dpToPx(4));
                 desc = String.format(Locale.getDefault(), "%s %s %s", time, formatEventType(item.mEventType), AppUtil.formatMilliSeconds(item.mUsageTime));
             } else {
+                if (item.mEventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                    holder.mLayout.setPadding(dpToPx(16), dpToPx(12), dpToPx(16), 0);
+                } else {
+                    holder.mLayout.setPadding(dpToPx(16), 0, dpToPx(16), 0);
+                }
                 desc = String.format(Locale.getDefault(), "%s %s", time, formatEventType(item.mEventType));
             }
-            holder.mEvent.setText(desc);
+//            holder.mSign.setText(getSuffix(item.mEventType));
+            holder.mEvent.setText(String.format("%s %s", getPrefix(item.mEventType), desc));
         }
 
         private String formatEventType(int event) {
@@ -161,6 +170,32 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
+        private String getPrefix(int event) {
+            switch (event) {
+                case 1:
+                    return "┌";
+                case 2:
+                    return "└";
+                case 7:
+                    return "├";
+                default:
+                    return "├";
+            }
+        }
+
+        private String getSuffix(int event) {
+            switch (event) {
+                case 1:
+                    return "┐";
+                case 2:
+                    return "┘";
+                case 7:
+                    return "┤";
+                default:
+                    return "┤";
+            }
+        }
+
         @Override
         public int getItemCount() {
             return mData.size();
@@ -169,10 +204,14 @@ public class DetailActivity extends AppCompatActivity {
         class MyViewHolder extends RecyclerView.ViewHolder {
 
             TextView mEvent;
+            TextView mSign;
+            LinearLayout mLayout;
 
             MyViewHolder(View itemView) {
                 super(itemView);
                 mEvent = itemView.findViewById(R.id.event);
+                mSign = itemView.findViewById(R.id.sign);
+                mLayout = itemView.findViewById(R.id.layout);
             }
         }
     }
@@ -202,6 +241,11 @@ public class DetailActivity extends AppCompatActivity {
                 mAdapter.setData(appItems);
             }
         }
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
 }

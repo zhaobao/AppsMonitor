@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="timeline.lizimumu.com.t.timeline.lizimumu.com.app.ui.DetailActivity">
+    tools:context="timeline.lizimumu.com.t.ui.DetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
