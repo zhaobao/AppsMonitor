@@ -12,12 +12,12 @@ This app can:
 
 ## Screen shortcut
 
-#### splash & home & sort & ignore
+#### home
 ![splash](images/splash.jpg)
 ![home](images/home.jpg)
 ![sort](images/sort.jpg)
-![ignore](images/ignore.jpg)
 #### settings
+![ignore](images/ignore.jpg)
 ![list](images/list.jpg)
 ![settings](images/settings.jpg)
 
