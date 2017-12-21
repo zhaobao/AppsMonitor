@@ -15,7 +15,7 @@
     <string name="refresh">Refresh</string>
     <string name="functions">Functions</string>
     <string name="hide_system_apps">Hide system Apps</string>
-    <string name="hide_uninstall_apps">Hide uninstall Apps</string>
+    <string name="hide_uninstall_apps">Hide uninstalled Apps</string>
     <string name="ignore">Add to ignore</string>
     <string name="ignore_list">Ignore list</string>
     <string name="ignore_hint">Apps in this list will be hidden</string>
@@ -39,5 +39,6 @@
     <string name="version">v %1$s</string>
 
     <string name="share_desc">Hey check out this app, it\'s so cool, it can help checkout every app\'s time your spend on: %1$s%2$s</string>
+    <string name="slogon">Monitor Apps usage</string>
 
 </resources>
