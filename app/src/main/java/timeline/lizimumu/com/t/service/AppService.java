@@ -18,7 +18,7 @@ public class AppService extends Service {
     public static final String SERVICE_ACTION = "service_action";
     public static final String SERVICE_ACTION_CHECK = "service_action_check";
 
-    static final long CHECK_INTERVAL = 1000;
+    static final long CHECK_INTERVAL = 400;
 
     private DataManager mManager;
     private Context mContext;
