@@ -8,9 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -51,10 +51,12 @@ import timeline.lizimumu.com.t.util.BitmapUtil;
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_PACKAGE_NAME = "package_name";
+    public static final String EXTRA_DAY = "day";
 
     private MyAdapter mAdapter;
     private TextView mTime;
     private String mPackageName;
+    private int mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
+            mDay = intent.getIntExtra(EXTRA_DAY, 0);
             // icon
             ImageView imageView = findViewById(R.id.icon);
             Drawable icon = AppUtil.getPackageIcon(this, mPackageName);
@@ -146,9 +149,19 @@ public class DetailActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
                 }
                 return true;
+            case R.id.more:
+                startActivity(new Intent(
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + mPackageName)));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -229,7 +242,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected List<AppItem> doInBackground(String... strings) {
-            return new DataManager().getTargetAppTimeline(mContext.get(), strings[0]);
+            return new DataManager().getTargetAppTimeline(mContext.get(), strings[0], mDay);
         }
 
         @Override
@@ -253,11 +266,6 @@ public class DetailActivity extends AppCompatActivity {
                 mAdapter.setData(newList);
             }
         }
-    }
-
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
 

@@ -320,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         intent.putExtra(DetailActivity.EXTRA_PACKAGE_NAME, item.mPackageName);
+                        intent.putExtra(DetailActivity.EXTRA_DAY, mDay);
                         startActivityForResult(intent, 1);
                     }
                 });

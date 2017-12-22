@@ -42,12 +42,12 @@ public class DataManager {
         return false;
     }
 
-    public List<AppItem> getTargetAppTimeline(Context context, String target) {
+    public List<AppItem> getTargetAppTimeline(Context context, String target, int offset) {
         List<AppItem> items = new ArrayList<>();
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
 
-            long[] range = AppUtil.getTimeRange(0);
+            long[] range = AppUtil.getTimeRange(offset);
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
 
