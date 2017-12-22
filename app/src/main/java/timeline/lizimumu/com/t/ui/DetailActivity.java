@@ -4,10 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,6 +23,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +46,7 @@ import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
+import timeline.lizimumu.com.t.util.BitmapUtil;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -63,8 +72,9 @@ public class DetailActivity extends AppCompatActivity {
             mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
             // icon
             ImageView imageView = findViewById(R.id.icon);
+            Drawable icon = AppUtil.getPackageIcon(this, mPackageName);
             GlideApp.with(this)
-                    .load(AppUtil.getPackageIcon(this, mPackageName))
+                    .load(icon)
                     .transition(new DrawableTransitionOptions().crossFade())
                     .into(imageView);
             // name
@@ -73,13 +83,13 @@ public class DetailActivity extends AppCompatActivity {
             // time
             mTime = findViewById(R.id.time);
             // action
-            final Button button = findViewById(R.id.open);
+            final Button mOpenButton = findViewById(R.id.open);
             final Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(mPackageName);
             if (LaunchIntent == null) {
-                button.setClickable(false);
-                button.setAlpha(0.5f);
+                mOpenButton.setClickable(false);
+                mOpenButton.setAlpha(0.5f);
             } else {
-                button.setOnClickListener(new View.OnClickListener() {
+                mOpenButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         startActivity(LaunchIntent);
@@ -93,6 +103,29 @@ public class DetailActivity extends AppCompatActivity {
             mList.setAdapter(mAdapter);
             // load
             new MyAsyncTask(this).execute(mPackageName);
+            // color
+            final int defaultButtonFilterColor = getResources().getColor(R.color.colorPrimary);
+            Bitmap bitmap = BitmapUtil.drawableToBitmap(AppUtil.getPackageIcon(DetailActivity.this, mPackageName));
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getVibrantSwatch(); // 获取最欢快明亮的颜色！
+                    int color = defaultButtonFilterColor;
+                    if (swatch != null) {
+                        color = swatch.getRgb();
+                    }
+                    try {
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+                        Window window = getWindow();
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(color);
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                    mOpenButton.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                }
+            });
         }
     }
 
@@ -140,34 +173,16 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
             AppItem item = mData.get(position);
-            String time = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
-            String desc;
+            String desc = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
             if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
                 holder.mLayout.setPadding(dpToPx(16), 0, dpToPx(16), dpToPx(4));
-                desc = String.format(Locale.getDefault(), "%s %s %s", time, formatEventType(item.mEventType), AppUtil.formatMilliSeconds(item.mUsageTime));
-            } else {
-                if (item.mEventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                    holder.mLayout.setPadding(dpToPx(16), dpToPx(12), dpToPx(16), 0);
-                } else {
-                    holder.mLayout.setPadding(dpToPx(16), 0, dpToPx(16), 0);
-                }
-                desc = String.format(Locale.getDefault(), "%s %s", time, formatEventType(item.mEventType));
+            } else if (item.mEventType == -1) {
+                holder.mLayout.setPadding(dpToPx(16), dpToPx(4), dpToPx(16), dpToPx(4));
+                desc = AppUtil.formatMilliSeconds(item.mUsageTime);
+            } else if (item.mEventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                holder.mLayout.setPadding(dpToPx(16), dpToPx(12), dpToPx(16), 0);
             }
-//            holder.mSign.setText(getSuffix(item.mEventType));
             holder.mEvent.setText(String.format("%s %s", getPrefix(item.mEventType), desc));
-        }
-
-        private String formatEventType(int event) {
-            switch (event) {
-                case 1:
-                    return "open";
-                case 2:
-                    return "close";
-                case 7:
-                    return "using";
-                default:
-                    return "none";
-            }
         }
 
         private String getPrefix(int event) {
@@ -180,19 +195,6 @@ public class DetailActivity extends AppCompatActivity {
                     return "├";
                 default:
                     return "├";
-            }
-        }
-
-        private String getSuffix(int event) {
-            switch (event) {
-                case 1:
-                    return "┐";
-                case 2:
-                    return "┘";
-                case 7:
-                    return "┤";
-                default:
-                    return "┤";
             }
         }
 
@@ -233,12 +235,22 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<AppItem> appItems) {
             if (mContext.get() != null) {
+                List<AppItem> newList = new ArrayList<>();
                 long duration = 0;
                 for (AppItem item : appItems) {
+                    if (item.mEventType == UsageEvents.Event.USER_INTERACTION || item.mEventType == UsageEvents.Event.NONE) {
+                        continue;
+                    }
                     duration += item.mUsageTime;
+                    if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
+                        AppItem newItem = item.copy();
+                        newItem.mEventType = -1;
+                        newList.add(newItem);
+                    }
+                    newList.add(item);
                 }
                 mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), appItems.get(appItems.size() - 1).mCount));
-                mAdapter.setData(appItems);
+                mAdapter.setData(newList);
             }
         }
     }
@@ -247,5 +259,6 @@ public class DetailActivity extends AppCompatActivity {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
+
 
 }

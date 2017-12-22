@@ -23,7 +23,7 @@ public class AppItem {
                 mName, mPackageName, mEventTime, mUsageTime, mEventType, mIsSystem, mCount);
     }
 
-    AppItem copy() {
+    public AppItem copy() {
         AppItem newItem = new AppItem();
         newItem.mName = this.mName;
         newItem.mPackageName = this.mPackageName;
