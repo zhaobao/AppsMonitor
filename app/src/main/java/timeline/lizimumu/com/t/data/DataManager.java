@@ -47,9 +47,8 @@ public class DataManager {
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
 
-            long endTime = System.currentTimeMillis();
-            long startTime = AppUtil.startOfDay(endTime);
-            UsageEvents events = manager.queryEvents(startTime, endTime);
+            long[] range = AppUtil.getTimeRange(0);
+            UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
 
             AppItem item = new AppItem();
@@ -96,7 +95,7 @@ public class DataManager {
         return items;
     }
 
-    public List<AppItem> getApps(Context context, int sort) {
+    public List<AppItem> getApps(Context context, int sort, int offset) {
 
         List<AppItem> items = new ArrayList<>();
         List<AppItem> newList = new ArrayList<>();
@@ -107,9 +106,8 @@ public class DataManager {
             Map<String, Long> startPoints = new HashMap<>();
             Map<String, ClonedEvent> endPoints = new HashMap<>();
             // 获取事件
-            long endTime = System.currentTimeMillis();
-            long startTime = AppUtil.startOfDay(endTime);
-            UsageEvents events = manager.queryEvents(startTime, endTime);
+            long[] range = AppUtil.getTimeRange(offset);
+            UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
             while (events.hasNextEvent()) {
                 // 解析时间

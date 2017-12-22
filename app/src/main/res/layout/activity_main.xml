@@ -16,6 +16,7 @@
 
         <TextView
             android:id="@+id/enable_text"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -24,6 +25,13 @@
 
         <Switch
             android:id="@+id/enable_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:visibility="gone"
+            android:layout_marginEnd="-8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

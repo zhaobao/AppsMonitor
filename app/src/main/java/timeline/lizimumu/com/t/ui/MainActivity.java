@@ -18,9 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog mDialog;
     private SwipeRefreshLayout mSwipe;
     private long mTotal;
+    private int mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         initLayout();
         initEvents();
+        initSpinner();
 
         if (mManager.hasPermission(getApplicationContext())) process();
     }
@@ -85,6 +90,30 @@ public class MainActivity extends AppCompatActivity {
             mSwitch.setVisibility(View.VISIBLE);
             mSwitch.setChecked(false);
             mSwipe.setEnabled(false);
+        }
+    }
+
+    private void initSpinner() {
+        if (mManager.hasPermission(getApplicationContext())) {
+            Spinner spinner = findViewById(R.id.spinner);
+            spinner.setVisibility(View.VISIBLE);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                    R.array.duration, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (mDay != i) {
+                        mDay = i;
+                        process();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
         }
     }
 
@@ -128,15 +157,16 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         if (mManager.hasPermission(this)) {
             mSwipe.setEnabled(true);
-            process();
             mSwitch.setVisibility(View.GONE);
+            initSpinner();
+            process();
         }
     }
 
     private void process() {
         if (mManager.hasPermission(getApplicationContext())) {
             mList.setVisibility(View.INVISIBLE);
-            new MyAsyncTask().execute(PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT));
+            new MyAsyncTask().execute(PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), mDay);
         }
     }
 
@@ -313,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List<AppItem> doInBackground(Integer... integers) {
-            return mManager.getApps(getApplicationContext(), integers[0]);
+            return mManager.getApps(getApplicationContext(), integers[0], integers[1]);
         }
 
         @Override
@@ -323,7 +353,6 @@ public class MainActivity extends AppCompatActivity {
             for (AppItem item : appItems) {
                 if (item.mUsageTime <= 0) continue;
                 mTotal += item.mUsageTime;
-                Log.d("********", item.toString());
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
             mSwipe.setRefreshing(false);

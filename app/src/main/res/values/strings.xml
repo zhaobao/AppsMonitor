@@ -27,6 +27,11 @@
         <item>Sort by total usage count</item>
     </string-array>
 
+    <string-array name="duration">
+        <item>Today</item>
+        <item>Yesterday</item>
+    </string-array>
+
     <string name="grant_success">Grand permission successfully</string>
     <string name="toast_permission">Please find \"AppsTimeline\" and grant the permission</string>
     <string name="open">Open</string>
@@ -34,7 +39,7 @@
     <string name="duration">Duration</string>
     <string name="times">%1$s · %2$d times</string>
     <string name="times_only">times</string>
-    <string name="total">Today\'s usage %1$s</string>
+    <string name="total">Total usage %1$s</string>
     <string name="feedback">feedback: zhishoumowen@gmail.com</string>
     <string name="version">v %1$s</string>
 

@@ -17,6 +17,8 @@ import timeline.lizimumu.com.t.R;
 
 public final class AppUtil {
 
+    private static final long A_DAY = 86400 * 1000;
+
     public static String parsePackageName(PackageManager pckManager, String data) {
         ApplicationInfo applicationInformation;
         try {
@@ -77,13 +79,16 @@ public final class AppUtil {
         return packageManager.getLaunchIntentForPackage(packageName) != null;
     }
 
-    public static long startOfDay(long time) {
+    public static long[] getTimeRange(int offset) {
+        long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time);
-        cal.set(Calendar.HOUR_OF_DAY, 0); //set hours to zero
-        cal.set(Calendar.MINUTE, 0); // set minutes to zero
-        cal.set(Calendar.SECOND, 0); //set seconds to zero
-        return cal.getTimeInMillis();
+        cal.setTimeInMillis(timeNow - offset * A_DAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        long start = cal.getTimeInMillis();
+        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
+        return new long[]{start, end};
     }
 }
 

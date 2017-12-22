@@ -70,23 +70,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/group_about"
-        android:background="@drawable/bg_detail_header"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-
-        <TextView
-            android:textSize="16sp"
-            android:text="@string/about"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/group_share"
         android:background="@drawable/bg_detail_header"
         android:paddingStart="16dp"
@@ -113,6 +96,23 @@
             android:paddingTop="8dp"
             android:text="@string/functions"
             android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/group_about"
+        android:background="@drawable/bg_detail_header"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:textSize="16sp"
+            android:text="@string/about"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 
