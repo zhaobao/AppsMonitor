@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if (mDay != i) {
-                        mDay = i;
+                        int[] values = getResources().getIntArray(R.array.duration_int);
+                        mDay = values[i];
                         process();
                     }
                 }

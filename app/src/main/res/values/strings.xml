@@ -1,12 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AppsTimeline</string>
-
     <string name="enable_apps_monitor">Enable apps monitor</string>
     <string name="enable_apps_monitoring">Apps monitoring</string>
-
     <string name="notification_title">AppTimeline running</string>
     <string name="notification_message">monitoring your app usage</string>
-
     <string name="about">About</string>
     <string name="share">Like and share</string>
     <string name="sort">Sort</string>
@@ -21,18 +19,6 @@
     <string name="ignore_list">Ignore list</string>
     <string name="ignore_hint">Apps in this list will be hidden</string>
     <string name="ignore_success">Move to ignore list successfully</string>
-
-    <string-array name="sort">
-        <item>Sort by total usage time</item>
-        <item>Sort by last usage time</item>
-        <item>Sort by total usage count</item>
-    </string-array>
-
-    <string-array name="duration">
-        <item>Today</item>
-        <item>Yesterday</item>
-    </string-array>
-
     <string name="grant_success">Grand permission successfully</string>
     <string name="toast_permission">Please find \"AppsTimeline\" and grant the permission</string>
     <string name="open">Open</string>
@@ -43,9 +29,7 @@
     <string name="total">Total usage %1$s</string>
     <string name="feedback">feedback: zhishoumowen@gmail.com</string>
     <string name="version">v %1$s</string>
-
     <string name="share_desc">Hey check out this app, it\'s so cool, it can help checkout every app\'s time your spend on: %1$s%2$s</string>
     <string name="slogon">Monitor Apps usage</string>
     <string name="not_support">You device not support monitoring</string>
-
 </resources>

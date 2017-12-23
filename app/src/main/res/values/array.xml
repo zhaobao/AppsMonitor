@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort">
+        <item>Sort by total usage time</item>
+        <item>Sort by last usage time</item>
+        <item>Sort by total usage count</item>
+    </string-array>
+    <string-array name="duration">
+        <item>Today</item>
+        <item>Yesterday</item>
+        <item>7 Days</item>
+    </string-array>
+    <integer-array name="duration_int">
+        <item>0</item>
+        <item>1</item>
+        <item>7</item>
+    </integer-array>
+</resources>
