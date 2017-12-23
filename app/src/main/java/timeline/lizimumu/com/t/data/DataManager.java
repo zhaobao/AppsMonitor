@@ -3,11 +3,13 @@ package timeline.lizimumu.com.t.data;
 import android.app.AppOpsManager;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,10 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
+import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.database.IgnoreItem;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * DataManager
@@ -29,8 +34,16 @@ import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class DataManager {
 
-    public void requestPermission(Context context) {
-        context.startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+    public void requestPermission(Context context) throws ActivityNotFoundException {
+        Intent intent = new Intent();
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static boolean detectFunctionValid(Context context) {
+        Intent intent = new Intent();
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+        return context.getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER).size() > 0;
     }
 
     public boolean hasPermission(Context context) {

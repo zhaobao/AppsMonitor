@@ -14,6 +14,7 @@
 
         <ImageView
             android:id="@+id/icon"
+            android:transitionName="profile"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true" />

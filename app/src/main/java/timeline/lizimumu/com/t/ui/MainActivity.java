@@ -5,11 +5,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -61,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setExitTransition(new Explode());
+
         setContentView(R.layout.activity_main);
 
         mSwitch = findViewById(R.id.enable_switch);
@@ -123,9 +129,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
-                        Intent intent = new Intent(MainActivity.this, AppService.class);
-                        intent.putExtra(AppService.SERVICE_ACTION, AppService.SERVICE_ACTION_CHECK);
-                        startService(intent);
+                        if (!DataManager.detectFunctionValid(getApplicationContext())) {
+                            Toast.makeText(MainActivity.this, R.string.not_support, Toast.LENGTH_LONG).show();
+                            compoundButton.setChecked(false);
+                        } else {
+                            Intent intent = new Intent(MainActivity.this, AppService.class);
+                            intent.putExtra(AppService.SERVICE_ACTION, AppService.SERVICE_ACTION_CHECK);
+                            startService(intent);
+                        }
                     }
                 }
             });
@@ -314,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
                 itemView.setOnCreateContextMenuListener(this);
             }
 
+            @SuppressLint("RestrictedApi")
             void setOnClickListener(final AppItem item) {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -321,7 +333,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                         intent.putExtra(DetailActivity.EXTRA_PACKAGE_NAME, item.mPackageName);
                         intent.putExtra(DetailActivity.EXTRA_DAY, mDay);
-                        startActivityForResult(intent, 1);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.
+                                makeSceneTransitionAnimation(MainActivity.this, mIcon, "profile");
+                        startActivityForResult(intent, 1, options.toBundle());
                     }
                 });
             }

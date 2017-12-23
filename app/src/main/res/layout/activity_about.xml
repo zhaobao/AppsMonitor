@@ -8,7 +8,7 @@
     <ImageView
         android:layout_centerHorizontal="true"
         android:src="@mipmap/ic_launcher"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="140dp"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/imageView" />

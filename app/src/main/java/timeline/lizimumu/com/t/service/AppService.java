@@ -1,6 +1,7 @@
 package timeline.lizimumu.com.t.service;
 
 import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -70,9 +71,18 @@ public class AppService extends Service {
     }
 
     private void startIntervalCheck() {
-        Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_LONG).show();
-        mManager.requestPermission(mContext);
-        mHandler.post(mRepeatCheckTask);
+        boolean valid = true;
+        try {
+            mManager.requestPermission(mContext);
+        } catch (ActivityNotFoundException e) {
+            valid = false;
+        }
+        if (valid) {
+            Toast.makeText(mContext, R.string.toast_permission, Toast.LENGTH_LONG).show();
+            mHandler.post(mRepeatCheckTask);
+        } else {
+            Toast.makeText(mContext, R.string.not_support, Toast.LENGTH_LONG).show();
+        }
     }
 
 }

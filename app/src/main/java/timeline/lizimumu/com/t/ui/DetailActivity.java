@@ -11,13 +11,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.transition.Explode;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -61,6 +64,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setExitTransition(new Explode());
+
         setContentView(R.layout.activity_detail);
 
         ActionBar actionBar = getSupportActionBar();
@@ -111,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapUtil.drawableToBitmap(AppUtil.getPackageIcon(DetailActivity.this, mPackageName));
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @Override
-                public void onGenerated(Palette palette) {
+                public void onGenerated(@NonNull Palette palette) {
                     Palette.Swatch swatch = palette.getVibrantSwatch(); // 获取最欢快明亮的颜色！
                     int color = defaultButtonFilterColor;
                     if (swatch != null) {
@@ -154,9 +160,20 @@ public class DetailActivity extends AppCompatActivity {
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                         Uri.parse("package:" + mPackageName)));
                 return true;
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                Log.d(">>>>====----> Detail", "onOptionsItemSelected.android.R.id.home");
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(">>>>====----> Detail", "onBackPressed");
+        supportFinishAfterTransition();
     }
 
     public int dpToPx(int dp) {
