@@ -17,6 +17,7 @@
             android:transitionName="profile"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:contentDescription="@null"
             android:layout_centerVertical="true" />
 
         <TextView

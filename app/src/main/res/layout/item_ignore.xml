@@ -9,6 +9,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/app_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -16,11 +17,13 @@
         android:layout_alignParentTop="true" />
 
     <TextView
+        android:contentDescription="@null"
         android:id="@+id/app_name"
         android:textSize="16sp"
         android:singleLine="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/app_delete"
         android:layout_marginStart="18dp"
         android:layout_toEndOf="@+id/app_image" />
 
@@ -30,9 +33,11 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/app_name"
         android:layout_below="@+id/app_name"
+        android:layout_toStartOf="@+id/app_delete"
         android:textSize="12sp" />
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/app_delete"
         android:alpha="0.6"
         android:src="@drawable/ic_clear_black"

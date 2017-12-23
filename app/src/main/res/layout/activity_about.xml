@@ -6,6 +6,7 @@
     tools:context="timeline.lizimumu.com.t.ui.AboutActivity">
 
     <ImageView
+        android:contentDescription="@null"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/ic_launcher"
         android:layout_marginTop="140dp"

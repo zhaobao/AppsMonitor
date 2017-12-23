@@ -1,5 +1,6 @@
 package timeline.lizimumu.com.t.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class IgnoreActivity extends AppCompatActivity {
         new MyAsyncTask(this).execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
     class MyAsyncTask extends AsyncTask<Void, Void, List<IgnoreItem>> {
 
         private WeakReference<Context> mContext;
@@ -113,14 +115,14 @@ public class IgnoreActivity extends AppCompatActivity {
         class IgnoreViewHolder extends RecyclerView.ViewHolder {
 
             private ImageView mIcon;
-            private ImageView mDelete;
+//            private ImageView mDelete;
             private TextView mName;
             private TextView mCreated;
 
             IgnoreViewHolder(View itemView) {
                 super(itemView);
                 mIcon = itemView.findViewById(R.id.app_image);
-                mDelete = itemView.findViewById(R.id.app_delete);
+//                mDelete = itemView.findViewById(R.id.app_delete);
                 mName = itemView.findViewById(R.id.app_name);
                 mCreated = itemView.findViewById(R.id.app_time);
             }

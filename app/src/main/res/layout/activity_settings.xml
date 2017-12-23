@@ -17,6 +17,8 @@
             android:text="@string/hide_system_apps"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/switch_system_apps"
             android:layout_height="wrap_content" />
 
         <Switch
@@ -39,6 +41,8 @@
         <TextView
             android:textSize="16sp"
             android:text="@string/hide_uninstall_apps"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/switch_uninstall_appps"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

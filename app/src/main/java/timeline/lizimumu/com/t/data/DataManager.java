@@ -7,9 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
-import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.database.IgnoreItem;
 import timeline.lizimumu.com.t.util.AppUtil;

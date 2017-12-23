@@ -9,6 +9,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:contentDescription="@null"
         android:id="@+id/app_image"
         android:transitionName="profile"
         android:layout_width="40dp"
