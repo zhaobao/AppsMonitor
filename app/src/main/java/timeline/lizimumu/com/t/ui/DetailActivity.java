@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -142,6 +143,7 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.detail, menu);
+        // menu.removeItem(R.id.more);
         return true;
     }
 
@@ -156,9 +158,12 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.more:
-                startActivity(new Intent(
+                Intent intent = new Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + mPackageName)));
+                        Uri.parse("package:" + mPackageName));
+                if (getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER).size() > 0) {
+                    startActivity(intent);
+                }
                 return true;
             case android.R.id.home:
                 supportFinishAfterTransition();
