@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
+import android.transition.Fade;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        getWindow().setExitTransition(new Explode());
+        getWindow().setExitTransition(new Fade(Fade.OUT));
 
         setContentView(R.layout.activity_main);
 
@@ -131,14 +132,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
-                        if (!DataManager.detectFunctionValid(getApplicationContext())) {
-                            Toast.makeText(MainActivity.this, R.string.not_support, Toast.LENGTH_LONG).show();
-                            compoundButton.setChecked(false);
-                        } else {
-                            Intent intent = new Intent(MainActivity.this, AppService.class);
-                            intent.putExtra(AppService.SERVICE_ACTION, AppService.SERVICE_ACTION_CHECK);
-                            startService(intent);
-                        }
+                        Intent intent = new Intent(MainActivity.this, AppService.class);
+                        intent.putExtra(AppService.SERVICE_ACTION, AppService.SERVICE_ACTION_CHECK);
+                        startService(intent);
                     }
                 }
             });
@@ -239,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode > 0) process();
+        if (resultCode > 0) process();
     }
 
     @Override

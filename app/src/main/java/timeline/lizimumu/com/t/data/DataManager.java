@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -31,16 +32,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class DataManager {
 
-    public void requestPermission(Context context) throws ActivityNotFoundException {
-        Intent intent = new Intent();
+    public void requestPermission(Context context) {
+        Intent intent = new Intent(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-    }
-
-    public static boolean detectFunctionValid(Context context) {
-        Intent intent = new Intent();
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        return context.getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER).size() > 0;
     }
 
     public boolean hasPermission(Context context) {

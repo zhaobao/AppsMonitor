@@ -161,8 +161,11 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                         Uri.parse("package:" + mPackageName));
-                if (getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER).size() > 0) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                try {
                     startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return true;
             case android.R.id.home:

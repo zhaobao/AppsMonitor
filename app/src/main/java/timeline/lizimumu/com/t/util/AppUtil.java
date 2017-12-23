@@ -88,7 +88,13 @@ public final class AppUtil {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND , 0);
         long start = cal.getTimeInMillis();
-        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
+        // TODO ugly
+        long end;
+        if (offset > 2) {
+            end = start + offset * A_DAY > timeNow ? timeNow : start + offset * A_DAY;
+        } else {
+            end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
+        }
         return new long[]{start, end};
     }
 }
