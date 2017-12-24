@@ -8,11 +8,15 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import java.util.Locale;
 
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
+import timeline.lizimumu.com.t.stat.StatEnum;
+import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -84,12 +88,16 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.group_share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String shareText = getResources().getString(R.string.share_desc);
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT,
-                        String.format(Locale.getDefault(), getResources().getString(R.string.share_desc), AppConst.GP_DETAIL_PREFIX, BuildConfig.APPLICATION_ID));
+                        String.format(Locale.getDefault(), shareText, AppConst.GP_DETAIL_PREFIX, BuildConfig.APPLICATION_ID));
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
+                Bundle params = new Bundle();
+                params.putString("share_text", shareText);
+                StatManager.getInstance().logEvent(StatEnum.KEY_SHARE, params);
             }
         });
 

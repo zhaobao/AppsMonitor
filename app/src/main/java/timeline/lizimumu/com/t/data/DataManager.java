@@ -7,8 +7,11 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +23,8 @@ import java.util.Map;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.database.IgnoreItem;
+import timeline.lizimumu.com.t.stat.StatEnum;
+import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
@@ -169,6 +174,9 @@ public class DataManager {
                         return (int) (right.mUsageTime - left.mUsageTime);
                     }
                 });
+                Bundle params = new Bundle();
+                params.putString("package_name", items.get(0).mPackageName);
+                StatManager.getInstance().logEvent(StatEnum.KEY_TOP1, params);
             } else if (sort == 1) {
                 Collections.sort(items, new Comparator<AppItem>() {
                     @Override
