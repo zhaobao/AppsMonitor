@@ -4,6 +4,7 @@
         <item>Sort by total usage time</item>
         <item>Sort by last usage time</item>
         <item>Sort by total usage count</item>
+        <item>Sort by mobile data usage</item>
     </string-array>
     <string-array name="duration">
         <item>Today</item>

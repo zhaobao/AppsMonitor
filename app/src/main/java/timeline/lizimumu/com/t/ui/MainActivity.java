@@ -279,10 +279,10 @@ public class MainActivity extends AppCompatActivity {
             holder.mName.setText(item.mName);
             holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mUsageTime));
             holder.mTime.setText(String.format(Locale.getDefault(),
-                    "%s · %d %s",
+                    "%s · %d %s · %s",
                     new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
                     item.mCount,
-                    getResources().getString(R.string.times_only))
+                    getResources().getString(R.string.times_only), AppUtil.humanReadableByteCount(item.mMobile))
             );
             if (mTotal > 0) {
                 holder.mProgress.setProgress((int) (item.mUsageTime * 100 / mTotal));
