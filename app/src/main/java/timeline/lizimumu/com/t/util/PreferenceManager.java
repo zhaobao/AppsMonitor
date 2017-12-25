@@ -49,4 +49,8 @@ public class PreferenceManager {
     public boolean getUninstallSettings(String key) {
         return mShare.getBoolean(key, true);
     }
+
+    public boolean getSystemSettings(String key) {
+        return mShare.getBoolean(key, true);
+    }
 }
