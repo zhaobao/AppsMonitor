@@ -328,6 +328,8 @@ public class DetailActivity extends AppCompatActivity {
             if (mData != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     mData.setText(String.format(Locale.getDefault(), getResources().getString(R.string.wifi_data), AppUtil.humanReadableByteCount(aLong[0]), AppUtil.humanReadableByteCount(aLong[1])));
+                } else {
+                    mData.setVisibility(View.GONE);
                 }
             }
         }
