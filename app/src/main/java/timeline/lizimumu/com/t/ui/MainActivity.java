@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
 import android.transition.Fade;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     private Switch mSwitch;
     private TextView mSwitchText;
     private RecyclerView mList;
-    private DataManager mManager;
     private MyAdapter mAdapter;
     private AlertDialog mDialog;
     private SwipeRefreshLayout mSwipe;
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
         mSwitch = findViewById(R.id.enable_switch);
         mSwitchText = findViewById(R.id.enable_text);
-        mManager = new DataManager();
         mAdapter = new MyAdapter();
 
         mList = findViewById(R.id.list);
@@ -84,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         initEvents();
         initSpinner();
 
-        if (mManager.hasPermission(getApplicationContext())) process();
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) process();
     }
 
     private void initLayout() {
         mSwipe = findViewById(R.id.swipe_refresh);
-        if (mManager.hasPermission(getApplicationContext())) {
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             mSwitchText.setText(R.string.enable_apps_monitoring);
             mSwitch.setVisibility(View.GONE);
             mSwipe.setEnabled(true);
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSpinner() {
-        if (mManager.hasPermission(getApplicationContext())) {
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             Spinner spinner = findViewById(R.id.spinner);
             spinner.setVisibility(View.VISIBLE);
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -127,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        if (!mManager.hasPermission(getApplicationContext())) {
+        if (!DataManager.getInstance().hasPermission(getApplicationContext())) {
             mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!mManager.hasPermission(getApplicationContext())) {
+        if (!DataManager.getInstance().hasPermission(getApplicationContext())) {
             mSwitch.setChecked(false);
         }
     }
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (mManager.hasPermission(this)) {
+        if (DataManager.getInstance().hasPermission(this)) {
             mSwipe.setEnabled(true);
             mSwitch.setVisibility(View.GONE);
             initSpinner();
@@ -173,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void process() {
-        if (mManager.hasPermission(getApplicationContext())) {
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             mList.setVisibility(View.INVISIBLE);
             new MyAsyncTask().execute(PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), mDay);
         }
@@ -210,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
                 return true;
             case R.id.sort:
-                if (mManager.hasPermission(getApplicationContext())) {
+                if (DataManager.getInstance().hasPermission(getApplicationContext())) {
                     mDialog = new AlertDialog.Builder(this)
                             .setTitle(R.string.sort)
                             .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
@@ -356,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected List<AppItem> doInBackground(Integer... integers) {
-            return mManager.getApps(getApplicationContext(), integers[0], integers[1]);
+            return DataManager.getInstance().getApps(getApplicationContext(), integers[0], integers[1]);
         }
 
         @Override

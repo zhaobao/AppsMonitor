@@ -3,15 +3,12 @@ package timeline.lizimumu.com.t.data;
 import android.app.AppOpsManager;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +33,16 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  */
 
 public class DataManager {
+
+    private static DataManager mInstance;
+
+    public static void init() {
+        mInstance = new DataManager();
+    }
+
+    public static DataManager getInstance() {
+        return mInstance;
+    }
 
     public void requestPermission(Context context) {
         Intent intent = new Intent(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));

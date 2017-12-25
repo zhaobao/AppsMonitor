@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import timeline.lizimumu.com.t.R;
 
@@ -79,6 +80,24 @@ public final class AppUtil {
         return packageManager.getLaunchIntentForPackage(packageName) != null;
     }
 
+    public static int getAppUid(PackageManager packageManager, String packageName) {
+        ApplicationInfo applicationInfo;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+            return applicationInfo.uid;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static long getTimesMonthMorning() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+        return cal.getTimeInMillis();
+    }
+
     public static long[] getTimeRange(int offset) {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
@@ -96,6 +115,16 @@ public final class AppUtil {
             end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
         }
         return new long[]{start, end};
+    }
+
+    public static String humanReadableByteCount(long bytes) {
+//        int unit = si ? 1000 : 1024;
+        int unit = 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+//        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        String pre = "KMGTPE".charAt(exp-1) + "";
+        return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }
 

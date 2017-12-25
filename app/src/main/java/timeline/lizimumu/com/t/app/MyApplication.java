@@ -8,6 +8,7 @@ import java.util.List;
 
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.data.AppItem;
+import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.stat.StatManager;
@@ -26,6 +27,7 @@ public class MyApplication extends Application {
         PreferenceManager.init(this);
         getApplicationContext().startService(new Intent(getApplicationContext(), AppService.class));
         DbExecutor.init(getApplicationContext());
+        DataManager.init();
         insertDefault();
         StatManager.initInstance(getApplicationContext());
     }

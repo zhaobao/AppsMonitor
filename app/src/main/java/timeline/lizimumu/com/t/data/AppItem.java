@@ -15,6 +15,8 @@ public class AppItem {
     public int mEventType;
     public int mCount;
     private boolean mIsSystem;
+    public long mWifi;
+    public long mMobile;
 
     @Override
     public String toString() {

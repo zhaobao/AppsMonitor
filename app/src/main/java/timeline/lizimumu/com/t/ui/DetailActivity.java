@@ -1,6 +1,9 @@
 package timeline.lizimumu.com.t.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.usage.NetworkStats;
+import android.app.usage.NetworkStatsManager;
 import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
@@ -9,15 +12,20 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.transition.Explode;
 import android.util.DisplayMetrics;
@@ -60,6 +68,7 @@ public class DetailActivity extends AppCompatActivity {
     private MyAdapter mAdapter;
     private TextView mTime;
     private String mPackageName;
+    private TextView mData;
     private int mDay;
 
     @Override
@@ -119,6 +128,9 @@ public class DetailActivity extends AppCompatActivity {
             mList.setAdapter(mAdapter);
             // load
             new MyAsyncTask(this).execute(mPackageName);
+            // data
+            mData = findViewById(R.id.data);
+            new MyDataAsyncTask().execute(mPackageName);
             // color
             final int defaultButtonFilterColor = getResources().getColor(R.color.colorPrimary);
             Bitmap bitmap = BitmapUtil.drawableToBitmap(AppUtil.getPackageIcon(DetailActivity.this, mPackageName));
@@ -266,6 +278,61 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    class MyDataAsyncTask extends AsyncTask<String, Void, Long[]> {
+
+        @Override
+        protected Long[] doInBackground(String... strings) {
+            long totalWifi = 0;
+            long totalMobile = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                NetworkStatsManager networkStatsManager = (NetworkStatsManager) getSystemService(Context.NETWORK_STATS_SERVICE);
+                int targetUid = AppUtil.getAppUid(getPackageManager(), mPackageName);
+                long[] range = AppUtil.getTimeRange(mDay);
+                try {
+                    if (networkStatsManager != null) {
+                        NetworkStats networkStats = networkStatsManager.querySummary(ConnectivityManager.TYPE_WIFI, "", range[0], range[1]);
+                        if (networkStats != null) {
+                            while (networkStats.hasNextBucket()) {
+                                NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                                networkStats.getNextBucket(bucket);
+                                if (bucket.getUid() == targetUid) {
+                                    totalWifi += bucket.getTxBytes() + bucket.getRxBytes();
+                                    Log.d("-----", "" + totalWifi);
+                                }
+                            }
+                        }
+                        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+                        if (ActivityCompat.checkSelfPermission(DetailActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                            NetworkStats networkStatsM = networkStatsManager.querySummary(ConnectivityManager.TYPE_MOBILE, tm.getSubscriberId(), range[0], range[1]);
+                            if (networkStatsM != null) {
+                                while (networkStatsM.hasNextBucket()) {
+                                    NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                                    networkStatsM.getNextBucket(bucket);
+                                    if (bucket.getUid() == targetUid) {
+                                        totalMobile += bucket.getTxBytes() + bucket.getRxBytes();
+                                        Log.d("=====", "" + totalWifi);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            return new Long[]{totalWifi, totalMobile};
+        }
+
+        @Override
+        protected void onPostExecute(Long[] aLong) {
+            if (mData != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    mData.setText(String.format(Locale.getDefault(), getResources().getString(R.string.wifi_data), AppUtil.humanReadableByteCount(aLong[0]), AppUtil.humanReadableByteCount(aLong[1])));
+                }
+            }
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     class MyAsyncTask extends AsyncTask<String, Void, List<AppItem>> {
 
@@ -277,7 +344,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected List<AppItem> doInBackground(String... strings) {
-            return new DataManager().getTargetAppTimeline(mContext.get(), strings[0], mDay);
+            return DataManager.getInstance().getTargetAppTimeline(mContext.get(), strings[0], mDay);
         }
 
         @Override

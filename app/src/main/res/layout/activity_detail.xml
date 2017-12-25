@@ -40,6 +40,14 @@
             android:layout_below="@+id/name"
             android:layout_marginTop="4dp" />
 
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/icon"
+            android:textSize="13sp"
+            android:layout_alignStart="@+id/time" />
+
         <Button
             android:id="@+id/open"
             android:background="@drawable/bg_button"
