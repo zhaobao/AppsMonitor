@@ -87,6 +87,12 @@ public class DetailActivity extends AppCompatActivity {
                     .load(icon)
                     .transition(new DrawableTransitionOptions().crossFade())
                     .into(imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openDetail();
+                }
+            });
             // name
             TextView name = findViewById(R.id.name);
             name.setText(AppUtil.parsePackageName(getPackageManager(), mPackageName));
@@ -158,15 +164,7 @@ public class DetailActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.more:
-                Intent intent = new Intent(
-                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + mPackageName));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                openDetail();
                 return true;
             case android.R.id.home:
                 supportFinishAfterTransition();
@@ -174,6 +172,18 @@ public class DetailActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void openDetail() {
+        Intent intent = new Intent(
+                android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:" + mPackageName));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

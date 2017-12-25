@@ -26,7 +26,7 @@
     <string name="duration">Duration</string>
     <string name="times">%1$s · %2$d times</string>
     <string name="times_only">times</string>
-    <string name="total">Total usage %1$s</string>
+    <string name="total">%1$s</string>
     <string name="feedback">feedback: zhishoumowen@gmail.com</string>
     <string name="version">v %1$s</string>
     <string name="share_desc">Hey check out this app, it\'s so cool, it can help checkout every app\'s time your spend on: %1$s%2$s</string>
