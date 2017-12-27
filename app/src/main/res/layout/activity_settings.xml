@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:text="@string/settings_function"
+        android:textSize="14sp" />
+
     <RelativeLayout
         android:id="@+id/group_system"
         android:background="@drawable/bg_detail_header"
@@ -27,6 +37,26 @@
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:id="@+id/group_ignore"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/bg_detail_header"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/ignore_list"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -56,22 +86,15 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/group_ignore"
-        android:background="@drawable/bg_detail_header"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="64dp">
-
-        <TextView
-            android:textSize="16sp"
-            android:text="@string/ignore_list"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:text="@string/settings_more"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/group_share"
@@ -87,19 +110,6 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="231dp"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:text="@string/functions"
-            android:textSize="14sp" />
 
     </RelativeLayout>
 
