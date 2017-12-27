@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:text="@string/slogon"
+            android:text="@string/slogan"
             android:textSize="12sp"
             android:textStyle="italic" />
 
