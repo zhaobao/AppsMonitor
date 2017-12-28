@@ -34,6 +34,7 @@ import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.ui.DetailActivity;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
+import timeline.lizimumu.com.t.util.SortEnum;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -74,7 +75,7 @@ public class DataManager {
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
         if (manager != null) {
 
-            long[] range = AppUtil.getTimeRange(offset);
+            long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
 
@@ -133,7 +134,7 @@ public class DataManager {
             Map<String, Long> startPoints = new HashMap<>();
             Map<String, ClonedEvent> endPoints = new HashMap<>();
             // 获取事件
-            long[] range = AppUtil.getTimeRange(offset);
+            long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
             while (events.hasNextEvent()) {
@@ -259,7 +260,7 @@ public class DataManager {
     private Map<String, Long> getMobileData(Context context, TelephonyManager tm, NetworkStatsManager nsm, int offset) {
         Map<String, Long> result = new HashMap<>();
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            long[] range = AppUtil.getTimeRange(offset);
+            long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
             NetworkStats networkStatsM;
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

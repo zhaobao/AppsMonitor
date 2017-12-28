@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -91,38 +92,85 @@ public final class AppUtil {
         return 0;
     }
 
-    public static long getTimesMonthMorning() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
-        return cal.getTimeInMillis();
+    public static long[] getTimeRange(SortEnum sort) {
+        long[] range;
+        switch (sort) {
+            case TODAY: range = getTodayRange(); break;
+            case YESTERDAY: range = getYesterday(); break;
+            case THIS_WEEK: range = getThisWeek(); break;
+            case THIS_MONTH: range = getThisMonth(); break;
+            case THIS_YEAR: range = getThisYear(); break;
+            default: range=  getTodayRange();
+        }
+        Log.d("**********", range[0] + " ~ " + range[1]);
+        return range;
     }
 
-    public static long[] getTimeRange(int offset) {
+
+    private static long[] getTodayRange() {
         long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timeNow - offset * A_DAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND , 0);
+        return new long[]{cal.getTimeInMillis(), timeNow};
+    }
+
+    private static long[] getYesterday() {
+        long timeNow = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timeNow - A_DAY);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND , 0);
         long start = cal.getTimeInMillis();
-        // TODO ugly
-        long end;
-        if (offset > 2) {
-            end = start + offset * A_DAY > timeNow ? timeNow : start + offset * A_DAY;
-        } else {
-            end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
-        }
+        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
         return new long[]{start, end};
     }
 
+    private static long[] getThisWeek() {
+        long timeNow = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND , 0);
+        long start = cal.getTimeInMillis();
+        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
+        return new long[]{start, end};
+    }
+
+    private static long[] getThisMonth() {
+        long timeNow = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND , 0);
+        return new long[]{cal.getTimeInMillis(), timeNow};
+    }
+
+    private static long[] getThisYear() {
+        long timeNow = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR));
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND , 0);
+        return new long[]{cal.getTimeInMillis(), timeNow};
+    }
+
     public static String humanReadableByteCount(long bytes) {
-//        int unit = si ? 1000 : 1024;
         int unit = 1024;
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-//        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         String pre = "KMGTPE".charAt(exp-1) + "";
         return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }

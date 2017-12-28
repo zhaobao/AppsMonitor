@@ -59,6 +59,7 @@ import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.BitmapUtil;
+import timeline.lizimumu.com.t.util.SortEnum;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -287,7 +288,7 @@ public class DetailActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 NetworkStatsManager networkStatsManager = (NetworkStatsManager) getSystemService(Context.NETWORK_STATS_SERVICE);
                 int targetUid = AppUtil.getAppUid(getPackageManager(), mPackageName);
-                long[] range = AppUtil.getTimeRange(mDay);
+                long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(mDay));
                 try {
                     if (networkStatsManager != null) {
                         NetworkStats networkStats = networkStatsManager.querySummary(ConnectivityManager.TYPE_WIFI, "", range[0], range[1]);

@@ -16,7 +16,7 @@
 
     <RelativeLayout
         android:id="@+id/group_system"
-        android:background="@drawable/bg_detail_header"
+        android:background="@drawable/bg_settings_item"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
 
     <RelativeLayout
         android:id="@+id/group_uninstall"
-        android:background="@drawable/bg_detail_header"
+        android:background="@drawable/bg_settings_item"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
@@ -98,7 +98,7 @@
 
     <RelativeLayout
         android:id="@+id/group_share"
-        android:background="@drawable/bg_detail_header"
+        android:background="@drawable/bg_settings_item"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
@@ -115,7 +115,7 @@
 
     <RelativeLayout
         android:id="@+id/group_about"
-        android:background="@drawable/bg_detail_header"
+        android:background="@drawable/bg_settings_item"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:layout_width="match_parent"
