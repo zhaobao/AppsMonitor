@@ -96,13 +96,11 @@ public final class AppUtil {
         long[] range;
         switch (sort) {
             case TODAY: range = getTodayRange(); break;
-            case YESTERDAY: range = getYesterday(); break;
             case THIS_WEEK: range = getThisWeek(); break;
             case THIS_MONTH: range = getThisMonth(); break;
             case THIS_YEAR: range = getThisYear(); break;
             default: range=  getTodayRange();
         }
-        Log.d("**********", range[0] + " ~ " + range[1]);
         return range;
     }
 
@@ -117,30 +115,17 @@ public final class AppUtil {
         return new long[]{cal.getTimeInMillis(), timeNow};
     }
 
-    private static long[] getYesterday() {
-        long timeNow = System.currentTimeMillis();
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(timeNow - A_DAY);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
-        long start = cal.getTimeInMillis();
-        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
-        return new long[]{start, end};
-    }
-
     private static long[] getThisWeek() {
-        long timeNow = System.currentTimeMillis();
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        long end = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_WEEK, -7);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND , 0);
         long start = cal.getTimeInMillis();
-        long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
         return new long[]{start, end};
+//        return getThisMonth();
     }
 
     private static long[] getThisMonth() {

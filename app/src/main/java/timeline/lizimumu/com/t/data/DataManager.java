@@ -4,7 +4,7 @@ import android.Manifest;
 import android.app.AppOpsManager;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
-import android.app.usage.UsageEvents;
+import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,22 +16,22 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.database.DbExecutor;
 import timeline.lizimumu.com.t.database.IgnoreItem;
 import timeline.lizimumu.com.t.stat.StatEnum;
 import timeline.lizimumu.com.t.stat.StatManager;
-import timeline.lizimumu.com.t.ui.DetailActivity;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 import timeline.lizimumu.com.t.util.SortEnum;
@@ -73,113 +73,64 @@ public class DataManager {
     public List<AppItem> getTargetAppTimeline(Context context, String target, int offset) {
         List<AppItem> items = new ArrayList<>();
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        PackageManager packageManager = context.getPackageManager();
         if (manager != null) {
-
-            long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
-            UsageEvents events = manager.queryEvents(range[0], range[1]);
-            UsageEvents.Event event = new UsageEvents.Event();
-
-            AppItem item = new AppItem();
-            item.mPackageName = target;
-            item.mName = AppUtil.parsePackageName(context.getPackageManager(), target);
-
-            // 缓存
-            ClonedEvent prevEndEvent = null;
-            long start = 0;
-
-            while (events.hasNextEvent()) {
-                events.getNextEvent(event);
-                String currentPackage = event.getPackageName();
-                int eventType = event.getEventType();
-                long eventTime = event.getTimeStamp();
-                if (currentPackage.equals(target)) { // 本次交互开始
-                    // 记录第一次开始时间
-                    if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                        if (start == 0) {
-                            start = eventTime;
-                            item.mEventTime = eventTime;
-                            item.mEventType = eventType;
-                            item.mUsageTime = 0;
-                            items.add(item.copy());
-                        }
-                    } else if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) { // 结束事件
-                        // BUG 系统是不断的改event的，那就不能这样记录了
-                        prevEndEvent = new ClonedEvent(event);
-                    }
-                } else {
-                    // 记录最后一次结束事件
-                    if (prevEndEvent != null && start > 0) {
-                        item.mEventTime = prevEndEvent.timeStamp;
-                        item.mEventType = prevEndEvent.eventType;
-                        item.mUsageTime = prevEndEvent.timeStamp - start;
-                        if (item.mUsageTime <= 0) item.mUsageTime = 0;
-                        if (item.mUsageTime > AppConst.USAGE_TIME_MIX) item.mCount++;
-                        items.add(item.copy());
-                        start = 0;
-                    }
-                }
+            SortEnum sortRange = SortEnum.getSortEnum(offset);
+            long[] range = AppUtil.getTimeRange(sortRange);
+            List<UsageStats> stats = manager.queryUsageStats(sortRange.getValue(), range[0] - 1, range[1]);
+            for (UsageStats u : stats) {
+                if (!u.getPackageName().equals(target)) continue;
+                logEvent(packageManager, u);
+                if (u.getFirstTimeStamp() < range[0]) continue;
+                AppItem item = new AppItem();
+                item.mPackageName = u.getPackageName();
+                item.mFirstUsedTime = u.getFirstTimeStamp();
+                item.mLastUsedTime = u.getLastTimeStamp();
+                item.mTotalForTime = u.getTotalTimeInForeground();
+                items.add(item);
             }
         }
         return items;
+    }
+
+    private void logEvent(PackageManager packageManager, UsageStats u) {
+        Log.d("--------",  AppUtil.parsePackageName(packageManager, u.getPackageName()) + " " +
+                u.getPackageName() + " " +
+                new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(u.getFirstTimeStamp())) + " " +
+                new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(u.getLastTimeStamp())) + " " +
+                u.getLastTimeUsed() + " " +
+                u.getTotalTimeInForeground() + " " +
+                u.describeContents());
     }
 
     public List<AppItem> getApps(Context context, int sort, int offset) {
 
         List<AppItem> items = new ArrayList<>();
         List<AppItem> newList = new ArrayList<>();
+        Map<String, Long> mCacheTime = new HashMap<>();
         UsageStatsManager manager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+        PackageManager packageManager = context.getPackageManager();
         if (manager != null) {
-            // 缓存变量
-            String prevPackage = "";
-            Map<String, Long> startPoints = new HashMap<>();
-            Map<String, ClonedEvent> endPoints = new HashMap<>();
-            // 获取事件
-            long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
-            UsageEvents events = manager.queryEvents(range[0], range[1]);
-            UsageEvents.Event event = new UsageEvents.Event();
-            while (events.hasNextEvent()) {
-                // 解析时间
-                events.getNextEvent(event);
-                int eventType = event.getEventType();
-                long eventTime = event.getTimeStamp();
-                String eventPackage = event.getPackageName();
-                // 开始点设置
-                if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                    AppItem item = containItem(items, eventPackage);
-                    if (item == null) {
-                        item = new AppItem();
-                        item.mPackageName = eventPackage;
-                        items.add(item);
-                    }
-                    if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == 0) {
-                        startPoints.put(eventPackage, eventTime);
-                    }
+            SortEnum sortRange = SortEnum.getSortEnum(offset);
+            long[] range = AppUtil.getTimeRange(sortRange);
+            List<UsageStats> stats = manager.queryUsageStats(sortRange.getValue(), range[0] - 1, range[1]);
+            for (UsageStats u : stats) {
+                if (u.getFirstTimeStamp() < range[0]) continue;
+                boolean exists = mCacheTime.containsKey(u.getPackageName());
+                AppItem item;
+                if (!exists) {
+                    mCacheTime.put(u.getPackageName(), u.getTotalTimeInForeground());
+                    item = new AppItem();
+                } else {
+                    mCacheTime.put(u.getPackageName(), mCacheTime.get(u.getPackageName()) + u.getTotalTimeInForeground());
+                    item = containItem(items, u.getPackageName());
                 }
-                // 记录结束时间点
-                if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                    endPoints.put(eventPackage, new ClonedEvent(event));
-                }
-                // 计算时间和次数 事件应该是连续的
-                if (TextUtils.isEmpty(prevPackage)) prevPackage = eventPackage;
-                if (!prevPackage.equals(eventPackage)) { // 包名有变化
-                    if (startPoints.containsKey(prevPackage)
-                            && endPoints.containsKey(prevPackage)
-                            && startPoints.get(prevPackage) > 0) {
-                        ClonedEvent lastEndEvent = endPoints.get(prevPackage);
-                        long start = startPoints.get(prevPackage);
-                        AppItem prevItem = containItem(items, prevPackage);
-                        if (prevItem != null) {
-                            prevItem.mEventTime = lastEndEvent.timeStamp;
-                            long thisTime = lastEndEvent.timeStamp - start;
-                            if (thisTime <= 0) thisTime = 0;
-                            prevItem.mUsageTime += thisTime;
-                            if (thisTime > AppConst.USAGE_TIME_MIX) {
-                                prevItem.mCount++;
-                            }
-                        }
-                        startPoints.put(prevPackage, 0L);
-                    }
-                    prevPackage = eventPackage;
+                if (null != item) {
+                    item.mPackageName = u.getPackageName();
+                    item.mLastUsedTime = u.getLastTimeStamp();
+                    item.mFirstUsedTime = u.getFirstTimeStamp();
+                    if (!exists) items.add(item);
+                    logEvent(packageManager, u);
                 }
             }
         }
@@ -197,7 +148,6 @@ public class DataManager {
             boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
             boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
             List<IgnoreItem> ignoreItems = DbExecutor.getInstance().getAllItems();
-            PackageManager packageManager = context.getPackageManager();
             for (AppItem item : items) {
                 if (!AppUtil.openable(packageManager, item.mPackageName)) {
                     continue;
@@ -217,6 +167,7 @@ public class DataManager {
                         item.mMobile = mobileData.get(key);
                     }
                 }
+                item.mTotalForTime = mCacheTime.get(item.mPackageName);
                 item.mName = AppUtil.parsePackageName(packageManager, item.mPackageName);
                 newList.add(item);
             }
@@ -225,7 +176,7 @@ public class DataManager {
                 Collections.sort(newList, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
-                        return (int) (right.mUsageTime - left.mUsageTime);
+                        return (int) (right.mTotalForTime - left.mTotalForTime);
                     }
                 });
                 Bundle params = new Bundle();
@@ -235,17 +186,10 @@ public class DataManager {
                 Collections.sort(newList, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
-                        return (int) (right.mEventTime - left.mEventTime);
+                        return (int) (right.mLastUsedTime - left.mLastUsedTime);
                     }
                 });
             } else if (sort == 2) {
-                Collections.sort(newList, new Comparator<AppItem>() {
-                    @Override
-                    public int compare(AppItem left, AppItem right) {
-                        return right.mCount - left.mCount;
-                    }
-                });
-            } else {
                 Collections.sort(newList, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
@@ -297,20 +241,5 @@ public class DataManager {
             if (item.mPackageName.equals(packageName)) return true;
         }
         return false;
-    }
-
-    class ClonedEvent {
-
-        String packageName;
-        String eventClass;
-        long timeStamp;
-        int eventType;
-
-        ClonedEvent(UsageEvents.Event event) {
-            packageName = event.getPackageName();
-            eventClass = event.getClassName();
-            timeStamp = event.getTimeStamp();
-            eventType = event.getEventType();
-        }
     }
 }

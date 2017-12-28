@@ -42,7 +42,7 @@ public class MyApplication extends Application {
                 for (String packageName : mDefaults) {
                     AppItem item = new AppItem();
                     item.mPackageName = packageName;
-                    item.mEventTime = System.currentTimeMillis();
+                    item.mLastUsedTime = System.currentTimeMillis();
                     DbExecutor.getInstance().insertItem(item);
                 }
             }

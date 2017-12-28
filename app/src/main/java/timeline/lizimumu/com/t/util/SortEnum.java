@@ -6,7 +6,7 @@ package timeline.lizimumu.com.t.util;
  */
 
 public enum SortEnum {
-    TODAY(0), YESTERDAY(1), THIS_WEEK(2), THIS_MONTH(3), THIS_YEAR(4);
+    TODAY(0), THIS_WEEK(1), THIS_MONTH(2), THIS_YEAR(3);
 
     int sort;
 
@@ -19,14 +19,16 @@ public enum SortEnum {
             case 0:
                 return SortEnum.TODAY;
             case 1:
-                return SortEnum.YESTERDAY;
-            case 2:
                 return SortEnum.THIS_WEEK;
-            case 3:
+            case 2:
                 return SortEnum.THIS_MONTH;
-            case 4:
+            case 3:
                 return SortEnum.THIS_YEAR;
         }
         return SortEnum.TODAY;
+    }
+
+    public int getValue() {
+        return this.sort;
     }
 }

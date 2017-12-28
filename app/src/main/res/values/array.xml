@@ -3,21 +3,18 @@
     <string-array name="sort">
         <item>Sort by total usage time</item>
         <item>Sort by last usage time</item>
-        <item>Sort by total usage count</item>
         <item>Sort by mobile data usage</item>
     </string-array>
     <string-array name="duration">
-        <item>Today</item>
-        <item>Yesterday</item>
-        <item>This week</item>
-        <item>This month</item>
-        <item>This year</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
     </string-array>
     <integer-array name="duration_int">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
-        <item>4</item>
     </integer-array>
 </resources>

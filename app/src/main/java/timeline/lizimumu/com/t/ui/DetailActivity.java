@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
-import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -234,29 +233,10 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
             AppItem item = mData.get(position);
-            String desc = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
-            if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                holder.mLayout.setPadding(dpToPx(16), 0, dpToPx(16), dpToPx(4));
-            } else if (item.mEventType == -1) {
-                holder.mLayout.setPadding(dpToPx(16), dpToPx(4), dpToPx(16), dpToPx(4));
-                desc = AppUtil.formatMilliSeconds(item.mUsageTime);
-            } else if (item.mEventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                holder.mLayout.setPadding(dpToPx(16), dpToPx(12), dpToPx(16), 0);
-            }
-            holder.mEvent.setText(String.format("%s %s", getPrefix(item.mEventType), desc));
-        }
-
-        private String getPrefix(int event) {
-            switch (event) {
-                case 1:
-                    return "┌";
-                case 2:
-                    return "└";
-                case 7:
-                    return "├";
-                default:
-                    return "├";
-            }
+            String first = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mFirstUsedTime));
+            String last = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mLastUsedTime));
+            String duration = AppUtil.formatMilliSeconds(item.mTotalForTime);
+            holder.mEvent.setText(String.format("%s %s %s", first, last, duration));
         }
 
         @Override
@@ -356,18 +336,10 @@ public class DetailActivity extends AppCompatActivity {
                 List<AppItem> newList = new ArrayList<>();
                 long duration = 0;
                 for (AppItem item : appItems) {
-                    if (item.mEventType == UsageEvents.Event.USER_INTERACTION || item.mEventType == UsageEvents.Event.NONE) {
-                        continue;
-                    }
-                    duration += item.mUsageTime;
-                    if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                        AppItem newItem = item.copy();
-                        newItem.mEventType = -1;
-                        newList.add(newItem);
-                    }
+                    duration += item.mTotalForTime;
                     newList.add(item);
                 }
-                mTime.setText(String.format(getResources().getString(R.string.times), AppUtil.formatMilliSeconds(duration), appItems.get(appItems.size() - 1).mCount));
+                mTime.setText(String.format("%s", AppUtil.formatMilliSeconds(duration)));
                 mAdapter.setData(newList);
             }
         }

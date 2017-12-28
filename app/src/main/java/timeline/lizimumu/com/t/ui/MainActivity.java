@@ -135,12 +135,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            findViewById(R.id.enable).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mSwitch.performClick();
-                }
-            });
         }
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -277,15 +271,14 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(MyViewHolder holder, int position) {
             AppItem item = getItemInfoByPosition(position);
             holder.mName.setText(item.mName);
-            holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mUsageTime));
+            holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mTotalForTime));
             holder.mTime.setText(String.format(Locale.getDefault(),
-                    "%s · %d %s · %s",
-                    new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
-                    item.mCount,
-                    getResources().getString(R.string.times_only), AppUtil.humanReadableByteCount(item.mMobile))
+                    "%s · %s",
+                    new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mLastUsedTime)),
+                    AppUtil.humanReadableByteCount(item.mMobile))
             );
             if (mTotal > 0) {
-                holder.mProgress.setProgress((int) (item.mUsageTime * 100 / mTotal));
+                holder.mProgress.setProgress((int) (item.mTotalForTime * 100 / mTotal));
             } else {
                 holder.mProgress.setProgress(0);
             }
@@ -361,8 +354,8 @@ public class MainActivity extends AppCompatActivity {
             mList.setVisibility(View.VISIBLE);
             mTotal = 0;
             for (AppItem item : appItems) {
-                if (item.mUsageTime <= 0) continue;
-                mTotal += item.mUsageTime;
+                if (item.mTotalForTime <= 0) continue;
+                mTotal += item.mTotalForTime;
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
             mSwipe.setRefreshing(false);
