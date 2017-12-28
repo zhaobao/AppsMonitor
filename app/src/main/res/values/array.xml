@@ -9,15 +9,9 @@
     <string-array name="duration">
         <item>Today</item>
         <item>Yesterday</item>
-        <item>This week</item>
-        <item>This month</item>
-        <item>This year</item>
     </string-array>
     <integer-array name="duration_int">
         <item>0</item>
         <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
     </integer-array>
 </resources>

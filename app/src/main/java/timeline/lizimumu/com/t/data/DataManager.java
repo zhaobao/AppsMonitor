@@ -19,11 +19,14 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
@@ -78,6 +81,9 @@ public class DataManager {
             long[] range = AppUtil.getTimeRange(SortEnum.getSortEnum(offset));
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
+
+            Log.d("---------", new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[0])) + " " +
+                    new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[1])));
 
             AppItem item = new AppItem();
             item.mPackageName = target;
