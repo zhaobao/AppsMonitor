@@ -95,10 +95,12 @@ public class DataManager {
                 String currentPackage = event.getPackageName();
                 int eventType = event.getEventType();
                 long eventTime = event.getTimeStamp();
-                Log.d("||||------>", target + " " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(eventTime)) + " " + eventType);
+                Log.d("||||------>", currentPackage + " " + target + " " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(eventTime)) + " " + eventType);
                 if (currentPackage.equals(target)) { // 本次交互开始
+                    Log.d("||||||||||>", currentPackage + " " + target + " " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(eventTime)) + " " + eventType);
                     // 记录第一次开始时间
                     if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                        Log.d("********", "start " + start);
                         if (start == 0) {
                             start = eventTime;
                             item.mEventTime = eventTime;
@@ -110,6 +112,7 @@ public class DataManager {
                         if (start > 0) {
                             prevEndEvent = new ClonedEvent(event);
                         }
+                        Log.d("********", "add end " + start);
                     }
                 } else {
                     // 记录最后一次结束事件
@@ -121,6 +124,7 @@ public class DataManager {
                         if (item.mUsageTime > AppConst.USAGE_TIME_MIX) item.mCount++;
                         items.add(item.copy());
                         start = 0;
+                        prevEndEvent = null;
                     }
                 }
             }
@@ -156,31 +160,33 @@ public class DataManager {
                         item.mPackageName = eventPackage;
                         items.add(item);
                     }
-                    if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == null) {
+                    if (!startPoints.containsKey(eventPackage)) {
                         startPoints.put(eventPackage, eventTime);
                     }
                 }
                 // 记录结束时间点
                 if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                    if (startPoints.size() > 0 && startPoints.get(eventPackage) != null) endPoints.put(eventPackage, new ClonedEvent(event));
+                    if (startPoints.size() > 0 && startPoints.containsKey(eventPackage)) {
+                        endPoints.put(eventPackage, new ClonedEvent(event));
+                    }
                 }
                 // 计算时间和次数 事件应该是连续的
                 if (TextUtils.isEmpty(prevPackage)) prevPackage = eventPackage;
                 if (!prevPackage.equals(eventPackage)) { // 包名有变化
-                    if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage) && startPoints.get(prevPackage) > 0) {
+                    if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage)) {
                         ClonedEvent lastEndEvent = endPoints.get(prevPackage);
-                        long start = startPoints.get(prevPackage);
-                        AppItem prevItem = containItem(items, prevPackage);
-                        if (prevItem != null) {
-                            prevItem.mEventTime = lastEndEvent.timeStamp;
-                            long thisTime = lastEndEvent.timeStamp - start;
-                            if (thisTime <= 0) thisTime = 0;
-                            prevItem.mUsageTime += thisTime;
-                            if (thisTime > AppConst.USAGE_TIME_MIX) {
-                                prevItem.mCount++;
+                        AppItem listItem = containItem(items, prevPackage);
+                        if (listItem != null) { // update list item info
+                            listItem.mEventTime = lastEndEvent.timeStamp;
+                            long duration = lastEndEvent.timeStamp - startPoints.get(prevPackage);
+                            if (duration <= 0) duration = 0;
+                            listItem.mUsageTime += duration;
+                            if (duration > AppConst.USAGE_TIME_MIX) {
+                                listItem.mCount++;
                             }
                         }
-                        startPoints.put(prevPackage, 0L);
+                        startPoints.remove(prevPackage);
+                        endPoints.remove(prevPackage);
                     }
                     prevPackage = eventPackage;
                 }
