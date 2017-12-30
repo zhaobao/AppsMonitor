@@ -82,8 +82,8 @@ public class DataManager {
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
 
-            Log.d("---------", new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[0])) + " " +
-                    new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[1])));
+            Log.d("|--------> detail", new SimpleDateFormat("yyyy/MM/dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[0])) + " " +
+                    new SimpleDateFormat("yyyy/MM/dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[1])) + " " + target);
 
             AppItem item = new AppItem();
             item.mPackageName = target;
@@ -98,6 +98,7 @@ public class DataManager {
                 String currentPackage = event.getPackageName();
                 int eventType = event.getEventType();
                 long eventTime = event.getTimeStamp();
+                Log.d("||||------>", target + " " + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(eventTime)) + " " + eventType);
                 if (currentPackage.equals(target)) { // 本次交互开始
                     // 记录第一次开始时间
                     if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
@@ -109,8 +110,7 @@ public class DataManager {
                             items.add(item.copy());
                         }
                     } else if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) { // 结束事件
-                        // BUG 系统是不断的改event的，那就不能这样记录了
-                        prevEndEvent = new ClonedEvent(event);
+                        if (start > 0) prevEndEvent = new ClonedEvent(event);
                     }
                 } else {
                     // 记录最后一次结束事件
@@ -157,20 +157,18 @@ public class DataManager {
                         item.mPackageName = eventPackage;
                         items.add(item);
                     }
-                    if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == 0) {
+                    if (!startPoints.containsKey(eventPackage) || startPoints.get(eventPackage) == null) {
                         startPoints.put(eventPackage, eventTime);
                     }
                 }
                 // 记录结束时间点
                 if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                    endPoints.put(eventPackage, new ClonedEvent(event));
+                    if (startPoints.size() > 0 && startPoints.get(eventPackage) != null) endPoints.put(eventPackage, new ClonedEvent(event));
                 }
                 // 计算时间和次数 事件应该是连续的
                 if (TextUtils.isEmpty(prevPackage)) prevPackage = eventPackage;
                 if (!prevPackage.equals(eventPackage)) { // 包名有变化
-                    if (startPoints.containsKey(prevPackage)
-                            && endPoints.containsKey(prevPackage)
-                            && startPoints.get(prevPackage) > 0) {
+                    if (startPoints.containsKey(prevPackage) && endPoints.containsKey(prevPackage) && startPoints.get(prevPackage) > 0) {
                         ClonedEvent lastEndEvent = endPoints.get(prevPackage);
                         long start = startPoints.get(prevPackage);
                         AppItem prevItem = containItem(items, prevPackage);

@@ -98,7 +98,7 @@ public class IgnoreActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(IgnoreViewHolder holder, int position) {
             IgnoreItem item = mData.get(position);
-            holder.mCreated.setText(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mCreated)));
+            holder.mCreated.setText(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mCreated)));
             holder.mName.setText(item.mName);
             GlideApp.with(getApplicationContext())
                     .load(AppUtil.getPackageIcon(getApplicationContext(), item.mPackageName))
@@ -115,14 +115,12 @@ public class IgnoreActivity extends AppCompatActivity {
         class IgnoreViewHolder extends RecyclerView.ViewHolder {
 
             private ImageView mIcon;
-//            private ImageView mDelete;
             private TextView mName;
             private TextView mCreated;
 
             IgnoreViewHolder(View itemView) {
                 super(itemView);
                 mIcon = itemView.findViewById(R.id.app_image);
-//                mDelete = itemView.findViewById(R.id.app_delete);
                 mName = itemView.findViewById(R.id.app_name);
                 mCreated = itemView.findViewById(R.id.app_time);
             }

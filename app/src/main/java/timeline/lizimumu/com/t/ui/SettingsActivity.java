@@ -35,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setTitle(R.string.settings);
         }
 
+        // hide system
         mSwitchSystem = findViewById(R.id.switch_system_apps);
         mSwitchSystem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -53,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // hide uninstall
         mSwitchUninstall = findViewById(R.id.switch_uninstall_appps);
         mSwitchUninstall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -71,6 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // ignore list
         findViewById(R.id.group_ignore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // about
         findViewById(R.id.group_about).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // share
         findViewById(R.id.group_share).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
