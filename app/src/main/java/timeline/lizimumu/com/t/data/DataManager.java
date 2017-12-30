@@ -82,9 +82,6 @@ public class DataManager {
             UsageEvents events = manager.queryEvents(range[0], range[1]);
             UsageEvents.Event event = new UsageEvents.Event();
 
-            Log.d("|--------> detail", new SimpleDateFormat("yyyy/MM/dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[0])) + " " +
-                    new SimpleDateFormat("yyyy/MM/dd · HH:mm:ss", Locale.getDefault()).format(new Date(range[1])) + " " + target);
-
             AppItem item = new AppItem();
             item.mPackageName = target;
             item.mName = AppUtil.parsePackageName(context.getPackageManager(), target);
@@ -110,7 +107,9 @@ public class DataManager {
                             items.add(item.copy());
                         }
                     } else if (eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) { // 结束事件
-                        if (start > 0) prevEndEvent = new ClonedEvent(event);
+                        if (start > 0) {
+                            prevEndEvent = new ClonedEvent(event);
+                        }
                     }
                 } else {
                     // 记录最后一次结束事件
