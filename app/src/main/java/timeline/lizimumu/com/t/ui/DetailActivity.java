@@ -249,13 +249,11 @@ public class DetailActivity extends AppCompatActivity {
         private String getPrefix(int event) {
             switch (event) {
                 case 1:
-                    return "┌";
+                    return "┏ ";
                 case 2:
-                    return "└";
-                case 7:
-                    return "├";
+                    return "┗ ";
                 default:
-                    return "├";
+                    return "┣  ";
             }
         }
 
@@ -298,7 +296,6 @@ public class DetailActivity extends AppCompatActivity {
                                 networkStats.getNextBucket(bucket);
                                 if (bucket.getUid() == targetUid) {
                                     totalWifi += bucket.getTxBytes() + bucket.getRxBytes();
-                                    Log.d("-----", "" + totalWifi);
                                 }
                             }
                         }
@@ -311,7 +308,6 @@ public class DetailActivity extends AppCompatActivity {
                                     networkStatsM.getNextBucket(bucket);
                                     if (bucket.getUid() == targetUid) {
                                         totalMobile += bucket.getTxBytes() + bucket.getRxBytes();
-                                        Log.d("=====", "" + totalWifi);
                                     }
                                 }
                             }

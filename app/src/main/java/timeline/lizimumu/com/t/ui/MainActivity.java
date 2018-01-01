@@ -135,12 +135,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-            findViewById(R.id.enable).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mSwitch.performClick();
-                }
-            });
         }
         mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -280,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mUsageTime));
             holder.mTime.setText(String.format(Locale.getDefault(),
                     "%s · %d %s · %s",
-                    new SimpleDateFormat("yyyy.MM.dd · HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
+                    new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
                     item.mCount,
                     getResources().getString(R.string.times_only), AppUtil.humanReadableByteCount(item.mMobile))
             );

@@ -8,15 +8,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="160dp"
         android:padding="16dp"
         android:background="@drawable/bg_detail_header">
 
         <ImageView
             android:id="@+id/icon"
             android:transitionName="profile"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:contentDescription="@null"
             android:layout_centerVertical="true" />
 
@@ -44,9 +44,9 @@
             android:id="@+id/data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/icon"
-            android:textSize="13sp"
-            android:layout_alignStart="@+id/time" />
+            android:layout_alignStart="@+id/time"
+            android:layout_below="@+id/open"
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/open"
