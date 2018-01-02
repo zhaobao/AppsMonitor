@@ -56,7 +56,7 @@ import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.database.DbExecutor;
+import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.BitmapUtil;
 import timeline.lizimumu.com.t.util.SortEnum;
@@ -171,7 +171,7 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.ignore:
                 if (!TextUtils.isEmpty(mPackageName)) {
-                    DbExecutor.getInstance().insertItem(mPackageName);
+                    DbIgnoreExecutor.getInstance().insertItem(mPackageName);
                     setResult(1);
                     Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
                 }

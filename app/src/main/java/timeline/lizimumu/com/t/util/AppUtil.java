@@ -95,12 +95,23 @@ public final class AppUtil {
     public static long[] getTimeRange(SortEnum sort) {
         long[] range;
         switch (sort) {
-            case TODAY: range = getTodayRange(); break;
-            case YESTERDAY: range = getYesterday(); break;
-            case THIS_WEEK: range = getThisWeek(); break;
-            case THIS_MONTH: range = getThisMonth(); break;
-            case THIS_YEAR: range = getThisYear(); break;
-            default: range=  getTodayRange();
+            case TODAY:
+                range = getTodayRange();
+                break;
+            case YESTERDAY:
+                range = getYesterday();
+                break;
+            case THIS_WEEK:
+                range = getThisWeek();
+                break;
+            case THIS_MONTH:
+                range = getThisMonth();
+                break;
+            case THIS_YEAR:
+                range = getThisYear();
+                break;
+            default:
+                range = getTodayRange();
         }
         Log.d("**********", range[0] + " ~ " + range[1]);
         return range;
@@ -113,8 +124,19 @@ public final class AppUtil {
         cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return new long[]{cal.getTimeInMillis(), timeNow};
+    }
+
+    public static long getYesterdayTimestamp() {
+        long timeNow = System.currentTimeMillis();
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timeNow - A_DAY);
+        cal.set(Calendar.HOUR_OF_DAY, 3);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
     }
 
     private static long[] getYesterday() {
@@ -124,7 +146,7 @@ public final class AppUtil {
         cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
+        cal.set(Calendar.MILLISECOND, 0);
         long start = cal.getTimeInMillis();
         long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
         return new long[]{start, end};
@@ -137,7 +159,7 @@ public final class AppUtil {
         cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
+        cal.set(Calendar.MILLISECOND, 0);
         long start = cal.getTimeInMillis();
         long end = start + A_DAY > timeNow ? timeNow : start + A_DAY;
         return new long[]{start, end};
@@ -150,7 +172,7 @@ public final class AppUtil {
         cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return new long[]{cal.getTimeInMillis(), timeNow};
     }
 
@@ -163,7 +185,7 @@ public final class AppUtil {
         cal.set(Calendar.HOUR_OF_DAY, 3);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND , 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return new long[]{cal.getTimeInMillis(), timeNow};
     }
 
@@ -171,7 +193,7 @@ public final class AppUtil {
         int unit = 1024;
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = "KMGTPE".charAt(exp-1) + "";
+        String pre = "KMGTPE".charAt(exp - 1) + "";
         return String.format(Locale.getDefault(), "%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 }

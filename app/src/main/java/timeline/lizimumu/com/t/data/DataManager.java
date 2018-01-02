@@ -30,11 +30,10 @@ import java.util.Locale;
 import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
-import timeline.lizimumu.com.t.database.DbExecutor;
-import timeline.lizimumu.com.t.database.IgnoreItem;
+import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.db.IgnoreItem;
 import timeline.lizimumu.com.t.stat.StatEnum;
 import timeline.lizimumu.com.t.stat.StatManager;
-import timeline.lizimumu.com.t.ui.DetailActivity;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 import timeline.lizimumu.com.t.util.SortEnum;
@@ -205,7 +204,7 @@ public class DataManager {
 
             boolean hideSystem = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_SYSTEM_APPS);
             boolean hideUninstall = PreferenceManager.getInstance().getBoolean(PreferenceManager.PREF_SETTINGS_HIDE_UNINSTALL_APPS);
-            List<IgnoreItem> ignoreItems = DbExecutor.getInstance().getAllItems();
+            List<IgnoreItem> ignoreItems = DbIgnoreExecutor.getInstance().getAllItems();
             PackageManager packageManager = context.getPackageManager();
             for (AppItem item : items) {
                 if (!AppUtil.openable(packageManager, item.mPackageName)) {
@@ -258,7 +257,7 @@ public class DataManager {
                 Collections.sort(newList, new Comparator<AppItem>() {
                     @Override
                     public int compare(AppItem left, AppItem right) {
-                        return (int)(right.mMobile - left.mMobile);
+                        return (int) (right.mMobile - left.mMobile);
                     }
                 });
             }

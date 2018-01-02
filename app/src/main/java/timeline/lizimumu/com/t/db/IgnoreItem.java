@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.database;
+package timeline.lizimumu.com.t.db;
 
 /**
  * Ignore

@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import java.util.Locale;
 
 import timeline.lizimumu.com.t.AppConst;

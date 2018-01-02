@@ -9,7 +9,9 @@ import java.util.List;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.database.DbExecutor;
+import timeline.lizimumu.com.t.db.DbHistoryExecutor;
+import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.log.FileLogManager;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.PreferenceManager;
@@ -26,10 +28,12 @@ public class MyApplication extends Application {
         super.onCreate();
         PreferenceManager.init(this);
         getApplicationContext().startService(new Intent(getApplicationContext(), AppService.class));
-        DbExecutor.init(getApplicationContext());
+        DbIgnoreExecutor.init(getApplicationContext());
+        DbHistoryExecutor.init(getApplicationContext());
         DataManager.init();
         insertDefault();
         StatManager.initInstance(getApplicationContext());
+        FileLogManager.init();
     }
 
     private void insertDefault() {
@@ -43,7 +47,7 @@ public class MyApplication extends Application {
                     AppItem item = new AppItem();
                     item.mPackageName = packageName;
                     item.mEventTime = System.currentTimeMillis();
-                    DbExecutor.getInstance().insertItem(item);
+                    DbIgnoreExecutor.getInstance().insertItem(item);
                 }
             }
         }).run();

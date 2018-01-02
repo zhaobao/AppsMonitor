@@ -13,6 +13,7 @@ import android.widget.Toast;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.ui.MainActivity;
+import timeline.lizimumu.com.t.util.AlarmUtil;
 
 public class AppService extends Service {
 
@@ -33,6 +34,7 @@ public class AppService extends Service {
                 mHandler.removeCallbacks(mRepeatCheckTask);
                 Toast.makeText(mContext, R.string.grant_success, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mContext, MainActivity.class));
+                AlarmUtil.setAlarm(getApplicationContext());
             }
         }
     };

@@ -14,9 +14,8 @@ public class AppItem {
     public long mUsageTime;
     public int mEventType;
     public int mCount;
-    private boolean mIsSystem;
-    public long mWifi;
     public long mMobile;
+    private boolean mIsSystem;
 
     @Override
     public String toString() {

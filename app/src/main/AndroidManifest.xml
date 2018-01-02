@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="timeline.lizimumu.com.t">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -20,6 +21,12 @@
             android:launchMode="singleTask" />
 
         <service android:name=".service.AppService" />
+        <service android:name=".service.AlarmService" />
+        <receiver android:name=".receiver.AlarmReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="ALARM_RECEIVER" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".ui.SettingsActivity"

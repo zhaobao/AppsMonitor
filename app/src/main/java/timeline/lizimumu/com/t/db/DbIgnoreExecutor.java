@@ -1,4 +1,4 @@
-package timeline.lizimumu.com.t.database;
+package timeline.lizimumu.com.t.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,46 +15,46 @@ import timeline.lizimumu.com.t.data.AppItem;
  * Created by zb on 18/12/2017.
  */
 
-public class DbExecutor {
+public class DbIgnoreExecutor {
 
-    private static DbExecutor sInstance;
+    private static DbIgnoreExecutor sInstance;
     private static DbHelper mHelper;
 
-    private DbExecutor() {
+    private DbIgnoreExecutor() {
     }
 
     public static void init(Context context) {
         mHelper = new DbHelper(context);
-        sInstance = new DbExecutor();
+        sInstance = new DbIgnoreExecutor();
     }
 
-    public static DbExecutor getInstance() {
+    public static DbIgnoreExecutor getInstance() {
         return sInstance;
     }
 
     public void insertItem(AppItem item) {
         if (!exists(item.mPackageName)) {
             ContentValues values = new ContentValues();
-            values.put(DbConst.TableApp.FIELD_PACKAGE_NAME, item.mPackageName);
-            values.put(DbConst.TableApp.FIELD_CREATE_TIME, System.currentTimeMillis());
-            mHelper.getWritableDatabase().insert(DbConst.TableApp.TABLE_NAME, null, values);
+            values.put(DbConst.TableIgnore.FIELD_PACKAGE_NAME, item.mPackageName);
+            values.put(DbConst.TableIgnore.FIELD_CREATE_TIME, System.currentTimeMillis());
+            mHelper.getWritableDatabase().insert(DbConst.TableIgnore.TABLE_NAME, null, values);
         }
     }
 
     public void insertItem(String packageName) {
         if (!exists(packageName)) {
             ContentValues values = new ContentValues();
-            values.put(DbConst.TableApp.FIELD_PACKAGE_NAME, packageName);
-            values.put(DbConst.TableApp.FIELD_CREATE_TIME, System.currentTimeMillis());
-            mHelper.getWritableDatabase().insert(DbConst.TableApp.TABLE_NAME, null, values);
+            values.put(DbConst.TableIgnore.FIELD_PACKAGE_NAME, packageName);
+            values.put(DbConst.TableIgnore.FIELD_CREATE_TIME, System.currentTimeMillis());
+            mHelper.getWritableDatabase().insert(DbConst.TableIgnore.TABLE_NAME, null, values);
         }
     }
 
     public void deleteItem(IgnoreItem item) {
         if (exists(item.mPackageName)) {
             mHelper.getWritableDatabase().delete(
-                    DbConst.TableApp.TABLE_NAME,
-                    DbConst.TableApp.FIELD_PACKAGE_NAME + " = ?",
+                    DbConst.TableIgnore.TABLE_NAME,
+                    DbConst.TableIgnore.FIELD_PACKAGE_NAME + " = ?",
                     new String[]{item.mPackageName}
             );
         }
@@ -65,13 +65,13 @@ public class DbExecutor {
         List<IgnoreItem> items = new ArrayList<>();
         try {
             String[] columns = {
-                    DbConst.TableApp._ID,
-                    DbConst.TableApp.FIELD_PACKAGE_NAME,
-                    DbConst.TableApp.FIELD_CREATE_TIME,
+                    DbConst.TableIgnore._ID,
+                    DbConst.TableIgnore.FIELD_PACKAGE_NAME,
+                    DbConst.TableIgnore.FIELD_CREATE_TIME,
             };
-            String orderBy = DbConst.TableApp.FIELD_CREATE_TIME + " DESC";
+            String orderBy = DbConst.TableIgnore.FIELD_CREATE_TIME + " DESC";
             cursor = mHelper.getReadableDatabase().query(
-                    DbConst.TableApp.TABLE_NAME,
+                    DbConst.TableIgnore.TABLE_NAME,
                     columns,
                     null,
                     null,
@@ -91,15 +91,15 @@ public class DbExecutor {
         SQLiteDatabase database = mHelper.getWritableDatabase();
         Cursor cursor = null;
         try {
-            cursor = database.query(DbConst.TableApp.TABLE_NAME,
-                    new String[]{DbConst.TableApp._ID},
-                    DbConst.TableApp.FIELD_PACKAGE_NAME + " = ?",
+            cursor = database.query(DbConst.TableIgnore.TABLE_NAME,
+                    new String[]{DbConst.TableIgnore._ID},
+                    DbConst.TableIgnore.FIELD_PACKAGE_NAME + " = ?",
                     new String[]{packageName},
                     null,
                     null,
                     null);
             if (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex(DbConst.TableApp._ID));
+                int id = cursor.getInt(cursor.getColumnIndex(DbConst.TableIgnore._ID));
                 return id > 0;
             }
         } finally {
@@ -110,8 +110,8 @@ public class DbExecutor {
 
     private IgnoreItem cursorToItem(Cursor cursor) {
         IgnoreItem item = new IgnoreItem();
-        item.mPackageName = cursor.getString(cursor.getColumnIndex(DbConst.TableApp.FIELD_PACKAGE_NAME));
-        item.mCreated = cursor.getLong(cursor.getColumnIndex(DbConst.TableApp.FIELD_CREATE_TIME));
+        item.mPackageName = cursor.getString(cursor.getColumnIndex(DbConst.TableIgnore.FIELD_PACKAGE_NAME));
+        item.mCreated = cursor.getLong(cursor.getColumnIndex(DbConst.TableIgnore.FIELD_CREATE_TIME));
         return item;
     }
 }

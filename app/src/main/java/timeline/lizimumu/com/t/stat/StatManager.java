@@ -18,7 +18,8 @@ public class StatManager {
     private static FirebaseAnalytics mFirebaseInstance;
     private static StatManager mInstance;
 
-    private StatManager() {}
+    private StatManager() {
+    }
 
     public static void initInstance(Context context) {
         mFirebaseInstance = FirebaseAnalytics.getInstance(context);

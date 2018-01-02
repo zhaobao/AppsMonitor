@@ -43,7 +43,7 @@ import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
-import timeline.lizimumu.com.t.database.DbExecutor;
+import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.ignore:
-                DbExecutor.getInstance().insertItem(mAdapter.getItemInfoByPosition(item.getOrder()));
+                DbIgnoreExecutor.getInstance().insertItem(mAdapter.getItemInfoByPosition(item.getOrder()));
                 process();
                 Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
                 return true;

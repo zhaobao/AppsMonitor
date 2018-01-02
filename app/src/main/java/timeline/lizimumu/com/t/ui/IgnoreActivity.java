@@ -24,8 +24,8 @@ import java.util.Locale;
 
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.database.DbExecutor;
-import timeline.lizimumu.com.t.database.IgnoreItem;
+import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.db.IgnoreItem;
 import timeline.lizimumu.com.t.util.AppUtil;
 
 public class IgnoreActivity extends AppCompatActivity {
@@ -62,7 +62,7 @@ public class IgnoreActivity extends AppCompatActivity {
 
         @Override
         protected List<IgnoreItem> doInBackground(Void... voids) {
-            return DbExecutor.getInstance().getAllItems();
+            return DbIgnoreExecutor.getInstance().getAllItems();
         }
 
         @Override
@@ -129,7 +129,7 @@ public class IgnoreActivity extends AppCompatActivity {
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        DbExecutor.getInstance().deleteItem(item);
+                        DbIgnoreExecutor.getInstance().deleteItem(item);
                         new MyAsyncTask(IgnoreActivity.this).execute();
                     }
                 });
