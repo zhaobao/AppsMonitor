@@ -7,20 +7,20 @@
 
     <TextView
         android:id="@+id/hint"
-        android:text="@string/ignore_hint"
-        android:textSize="14sp"
-        android:paddingTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_detail_header"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:background="@drawable/bg_detail_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:paddingTop="8dp"
+        android:text="@string/ignore_hint"
+        android:textSize="14sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
-        android:layout_below="@+id/hint"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/hint" />
 
 </RelativeLayout>

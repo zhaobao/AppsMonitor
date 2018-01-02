@@ -17,7 +17,7 @@
 
     <string name="hide_system_apps">Hide system Apps</string>
     <string name="hide_uninstall_apps">Hide uninstalled Apps</string>
-    
+
     <string name="ignore">Ignore this app</string>
     <string name="ignore_hint">Apps in this list will be hidden</string>
     <string name="ignore_list">Ignore list</string>

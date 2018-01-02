@@ -7,27 +7,27 @@
 
     <LinearLayout
         android:id="@+id/enable"
-        android:background="@drawable/bg_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_detail_header"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp">
 
         <Spinner
             android:id="@+id/spinner"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/enable_text"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/enable_apps_monitor" />
+            android:text="@string/enable_apps_monitor"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/enable_switch"
@@ -38,16 +38,16 @@
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
-        android:layout_below="@+id/enable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/enable">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:visibility="invisible" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

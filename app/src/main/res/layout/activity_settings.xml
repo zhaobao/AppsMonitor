@@ -16,37 +16,37 @@
 
     <RelativeLayout
         android:id="@+id/group_system"
-        android:background="@drawable/bg_settings_item"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:background="@drawable/bg_settings_item"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
-            android:textSize="16sp"
-            android:text="@string/hide_system_apps"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/switch_system_apps"
-            android:layout_height="wrap_content" />
+            android:text="@string/hide_system_apps"
+            android:textSize="16sp" />
 
         <Switch
             android:id="@+id/switch_system_apps"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/group_uninstall"
-        android:background="@drawable/bg_settings_item"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:background="@drawable/bg_settings_item"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,10 +59,10 @@
 
         <Switch
             android:id="@+id/switch_uninstall_appps"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
@@ -95,35 +95,35 @@
 
     <RelativeLayout
         android:id="@+id/group_share"
-        android:background="@drawable/bg_settings_item"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:background="@drawable/bg_settings_item"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
-            android:textSize="16sp"
-            android:text="@string/share"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/share"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/group_about"
-        android:background="@drawable/bg_settings_item"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="56dp"
+        android:background="@drawable/bg_settings_item"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
-            android:textSize="16sp"
-            android:text="@string/about"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/about"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 

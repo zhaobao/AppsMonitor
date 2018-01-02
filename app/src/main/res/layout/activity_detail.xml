@@ -9,26 +9,26 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:padding="16dp"
-        android:background="@drawable/bg_detail_header">
+        android:background="@drawable/bg_detail_header"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/icon"
-            android:transitionName="profile"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerVertical="true"
             android:contentDescription="@null"
-            android:layout_centerVertical="true" />
+            android:transitionName="profile" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/icon"
+            android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/icon"
             android:layout_toStartOf="@+id/open"
-            android:layout_marginEnd="16dp"
             android:singleLine="true"
             android:textSize="16sp" />
 
@@ -50,14 +50,14 @@
 
         <Button
             android:id="@+id/open"
-            android:background="@drawable/bg_button"
-            android:textColor="@android:color/white"
-            android:minHeight="0dp"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="@string/open" />
+            android:background="@drawable/bg_button"
+            android:minHeight="0dp"
+            android:text="@string/open"
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

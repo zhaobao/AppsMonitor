@@ -34,6 +34,8 @@ public class AlarmService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         DataManager manager = DataManager.getInstance();
         List<AppItem> items = manager.getApps(this.getApplicationContext(), 0, 1);
+        // TODO clear first
+        DbHistoryExecutor.getInstance().clear();
         for (AppItem item : items) {
             HistoryItem historyItem = new HistoryItem();
             historyItem.mName = item.mName;
@@ -45,7 +47,7 @@ public class AlarmService extends IntentService {
             historyItem.mDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(historyItem.mTimeStamp));
             DbHistoryExecutor.getInstance().replace(historyItem);
         }
+        FileLogManager.getInstance().log("alarm " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis())) + "\n");
         AlarmUtil.setAlarm(this.getApplicationContext());
-        FileLogManager.getInstance().log("alarm exec " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis())) + "\n");
     }
 }

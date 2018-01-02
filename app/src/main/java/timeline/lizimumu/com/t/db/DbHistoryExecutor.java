@@ -30,6 +30,10 @@ public class DbHistoryExecutor {
         return sInstance;
     }
 
+    public void clear() {
+        mHelper.getWritableDatabase().delete(DbConst.TableHistory.TABLE_NAME, null, null);
+    }
+
     public long replace(HistoryItem historyItem) {
         ContentValues values = itemToContentValue(historyItem);
         return mHelper.getWritableDatabase().replace(DbConst.TableHistory.TABLE_NAME, null, values);

@@ -2,7 +2,6 @@ package timeline.lizimumu.com.t.log;
 
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,7 +21,9 @@ public class FileLogManager {
     private static final String LOG_PATH = Environment.getExternalStorageDirectory() + File.separator + PATH_NAME;
     private static final String LOG_FILE = LOG_PATH + File.separator + ALARM_LOG;
     private static FileLogManager mInstance;
-    private FileLogManager() {}
+
+    private FileLogManager() {
+    }
 
     public static void init() {
         mInstance = new FileLogManager();
