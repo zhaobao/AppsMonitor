@@ -34,17 +34,11 @@ public class DbHistoryExecutor {
         mHelper.getWritableDatabase().delete(DbConst.TableHistory.TABLE_NAME, null, null);
     }
 
-    public long replace(HistoryItem historyItem) {
-        ContentValues values = itemToContentValue(historyItem);
-        return mHelper.getWritableDatabase().replace(DbConst.TableHistory.TABLE_NAME, null, values);
-    }
-
-    public long insert(HistoryItem historyItem) {
+    public void insert(HistoryItem historyItem) {
         if (!exists(historyItem)) {
             ContentValues values = itemToContentValue(historyItem);
-            return mHelper.getWritableDatabase().insert(DbConst.TableHistory.TABLE_NAME, null, values);
+            mHelper.getWritableDatabase().insert(DbConst.TableHistory.TABLE_NAME, null, values);
         }
-        return 0;
     }
 
     public List<HistoryItem> getAllItems() {

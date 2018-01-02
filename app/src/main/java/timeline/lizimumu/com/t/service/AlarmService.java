@@ -45,7 +45,7 @@ public class AlarmService extends IntentService {
             historyItem.mDuration = item.mUsageTime;
             historyItem.mTimeStamp = AppUtil.getYesterdayTimestamp();
             historyItem.mDate = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(historyItem.mTimeStamp));
-            DbHistoryExecutor.getInstance().replace(historyItem);
+            DbHistoryExecutor.getInstance().insert(historyItem);
         }
         FileLogManager.getInstance().log("alarm " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis())) + "\n");
         AlarmUtil.setAlarm(this.getApplicationContext());

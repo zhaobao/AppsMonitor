@@ -44,6 +44,7 @@ import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
@@ -81,7 +82,10 @@ public class MainActivity extends AppCompatActivity {
         initEvents();
         initSpinner();
 
-        if (DataManager.getInstance().hasPermission(getApplicationContext())) process();
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+            process();
+            startService(new Intent(this, AlarmService.class));
+        }
     }
 
     private void initLayout() {

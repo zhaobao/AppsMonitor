@@ -19,7 +19,8 @@ public class AlarmUtil {
             long start = System.currentTimeMillis();
             Intent in = new Intent("ALARM_RECEIVER");
             PendingIntent pi = PendingIntent.getBroadcast(context, 0, in, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, start, 5 * 60 * 1000, pi);
+            // TODO 修改为真实值
+            alarmManager.set(AlarmManager.RTC_WAKEUP, start + 5 * 60 * 1000, pi);
         }
     }
 }

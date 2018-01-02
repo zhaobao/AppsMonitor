@@ -33,8 +33,8 @@ public class AppService extends Service {
             } else {
                 mHandler.removeCallbacks(mRepeatCheckTask);
                 Toast.makeText(mContext, R.string.grant_success, Toast.LENGTH_SHORT).show();
+                startService(new Intent(mContext, AlarmService.class));
                 startActivity(new Intent(mContext, MainActivity.class));
-                AlarmUtil.setAlarm(getApplicationContext());
             }
         }
     };
