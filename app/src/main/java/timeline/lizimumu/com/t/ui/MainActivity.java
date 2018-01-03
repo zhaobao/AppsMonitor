@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             process();
             startService(new Intent(this, AlarmService.class));
         }
+
+        Log.d(">>>>ID", PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
     }
 
     private void initLayout() {

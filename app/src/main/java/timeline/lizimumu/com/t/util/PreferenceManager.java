@@ -13,6 +13,7 @@ public class PreferenceManager {
     public static final String PREF_SETTINGS_HIDE_SYSTEM_APPS = "hide_system_apps";
     public static final String PREF_SETTINGS_HIDE_UNINSTALL_APPS = "hide_uninstall_apps";
     public static final String PREF_LIST_SORT = "sort_list";
+    public static final String FCM_ID = "fcm_id";
     private static final String PREF_NAME = "preference_application";
 
     private static PreferenceManager mManager;
@@ -52,5 +53,13 @@ public class PreferenceManager {
 
     public boolean getSystemSettings(String key) {
         return mShare.getBoolean(key, true);
+    }
+
+    public void putString(String key, String value) {
+        mShare.edit().putString(key, value).apply();
+    }
+
+    public String getString(String key) {
+        return mShare.getString(key, "");
     }
 }
