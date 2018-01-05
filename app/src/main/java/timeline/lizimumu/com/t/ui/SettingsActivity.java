@@ -13,7 +13,6 @@ import java.util.Locale;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.R;
-import timeline.lizimumu.com.t.stat.StatEnum;
 import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
@@ -98,9 +97,7 @@ public class SettingsActivity extends AppCompatActivity {
                         String.format(Locale.getDefault(), shareText, AppConst.GP_DETAIL_PREFIX, BuildConfig.APPLICATION_ID));
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
-                Bundle params = new Bundle();
-                params.putString("share_text", shareText);
-                StatManager.getInstance().logEvent(StatEnum.KEY_SHARE, params);
+                StatManager.getInstance().shareEvent(shareText);
             }
         });
 

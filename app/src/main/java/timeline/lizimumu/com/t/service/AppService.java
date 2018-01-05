@@ -13,7 +13,6 @@ import android.widget.Toast;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.ui.MainActivity;
-import timeline.lizimumu.com.t.util.AlarmUtil;
 
 public class AppService extends Service {
 

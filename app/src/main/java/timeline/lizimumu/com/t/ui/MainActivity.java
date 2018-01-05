@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +44,9 @@ import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
+import timeline.lizimumu.com.t.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.db.HistoryItem;
 import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;

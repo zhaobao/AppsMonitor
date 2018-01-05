@@ -12,9 +12,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class StatManager {
 
-    public final static String KEY_SHARE = "share";
-    public final static String KEY_TOP1 = "top1";
-
     private static FirebaseAnalytics mFirebaseInstance;
     private static StatManager mInstance;
 
@@ -30,7 +27,15 @@ public class StatManager {
         return mInstance;
     }
 
-    public void logEvent(StatEnum key, Bundle bundle) {
-        mFirebaseInstance.logEvent(key.name(), bundle);
+    public void top1Event(String packageName) {
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.ITEM_NAME, packageName);
+        mFirebaseInstance.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, params);
+    }
+
+    public void shareEvent(String shareText) {
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.CONTENT, shareText);
+        mFirebaseInstance.logEvent(FirebaseAnalytics.Event.SHARE, params);
     }
 }

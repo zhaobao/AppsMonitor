@@ -34,8 +34,6 @@ public class AlarmService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         DataManager manager = DataManager.getInstance();
         List<AppItem> items = manager.getApps(this.getApplicationContext(), 0, 1);
-        // TODO clear first
-        DbHistoryExecutor.getInstance().clear();
         for (AppItem item : items) {
             HistoryItem historyItem = new HistoryItem();
             historyItem.mName = item.mName;

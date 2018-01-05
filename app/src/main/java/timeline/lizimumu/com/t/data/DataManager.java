@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -32,7 +31,6 @@ import java.util.Map;
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.db.IgnoreItem;
-import timeline.lizimumu.com.t.stat.StatEnum;
 import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
@@ -236,9 +234,7 @@ public class DataManager {
                         return (int) (right.mUsageTime - left.mUsageTime);
                     }
                 });
-                Bundle params = new Bundle();
-                params.putString("package_name", items.get(0).mPackageName);
-                StatManager.getInstance().logEvent(StatEnum.KEY_TOP1, params);
+                StatManager.getInstance().top1Event(items.get(0).mPackageName);
             } else if (sort == 1) {
                 Collections.sort(newList, new Comparator<AppItem>() {
                     @Override

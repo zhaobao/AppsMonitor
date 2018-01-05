@@ -55,7 +55,7 @@ public class DbHistoryExecutor {
                     DbConst.TableHistory.FIELD_MOBILE_TRAFFIC,
                     DbConst.TableHistory.FIELD_NAME,
             };
-            String orderBy = DbConst.TableHistory.FIELD_TIMESTAMP + " DESC";
+            String orderBy = DbConst.TableHistory.FIELD_DURATION + " DESC";
             cursor = mHelper.getReadableDatabase().query(
                     DbConst.TableHistory.TABLE_NAME,
                     columns,

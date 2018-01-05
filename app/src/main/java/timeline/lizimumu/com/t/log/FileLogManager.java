@@ -30,17 +30,24 @@ public class FileLogManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                File file = new File(LOG_PATH);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                try {
-                    new File(LOG_FILE).createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                mInstance._init();
             }
         }).run();
+    }
+
+    private void _init() {
+        File d = new File(LOG_PATH);
+        if (!d.exists()) {
+            d.mkdirs();
+        }
+        File f = new File(LOG_FILE);
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static FileLogManager getInstance() {
@@ -48,6 +55,8 @@ public class FileLogManager {
     }
 
     public void log(String message) {
+
+        _init();
 
         FileOutputStream outputStream = null;
         PrintWriter writer = null;
