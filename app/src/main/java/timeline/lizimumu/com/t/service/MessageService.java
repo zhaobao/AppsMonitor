@@ -42,7 +42,7 @@ public class MessageService extends FirebaseMessagingService {
                     .setContentTitle(data.get("title"))
                     .setContentText(data.get("content"))
                     .setSound(notificationSound)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .build();
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             if (notificationManager != null) notificationManager.notify(1, n);
