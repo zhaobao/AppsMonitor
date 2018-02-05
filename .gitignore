@@ -56,3 +56,6 @@ freeline/
 freeline_project_description.json
 appstimeline.sketch
 publish/
+
+# scripts
+release.sh
