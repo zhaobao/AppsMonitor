@@ -35,6 +35,10 @@ public class FileLogManager {
         }).run();
     }
 
+    public static FileLogManager getInstance() {
+        return mInstance;
+    }
+
     private void _init() {
         File d = new File(LOG_PATH);
         if (!d.exists()) {
@@ -48,10 +52,6 @@ public class FileLogManager {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static FileLogManager getInstance() {
-        return mInstance;
     }
 
     public void log(String message) {
