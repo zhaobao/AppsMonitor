@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import timeline.lizimumu.com.t.data.HistoryItem;
+
 /**
  * Database Entry
  * Created by zb on 18/12/2017.

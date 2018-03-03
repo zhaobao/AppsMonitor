@@ -257,24 +257,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.settings:
                 startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
                 return true;
-//            case R.id.sort:
-//                if (DataManager.getInstance().hasPermission(getApplicationContext())) {
-//                    mDialog = new AlertDialog.Builder(this)
-//                            .setTitle(R.string.sort)
-//                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialogInterface, int i) {
-//                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-//                                    process();
-//                                    mDialog.dismiss();
-//                                }
-//                            })
-//                            .create();
-//                    mDialog.show();
-//                    return true;
-//                } else {
-//                    return false;
-//                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -300,11 +282,6 @@ public class MainActivity extends AppCompatActivity {
         MyAdapter() {
             super();
             mData = new ArrayList<>();
-        }
-
-        void clear() {
-            mData = new ArrayList<>();
-            notifyDataSetChanged();
         }
 
         void updateData(List<AppItem> data) {

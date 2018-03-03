@@ -30,7 +30,6 @@ import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
-import timeline.lizimumu.com.t.db.IgnoreItem;
 import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;

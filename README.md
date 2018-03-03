@@ -5,10 +5,8 @@ Android apps for monitoring apps usage on your device
 
 This app can:
 
-- monitoring all your apps behavior
-- show exactly duration of every apps usage
-- show app usage time of every
-- control your self and enjoy better life
+- monitor each App usage time
+- monitor each App traffic usage
 
 ## Screen shortcut
 

@@ -30,11 +30,11 @@ public class MyApplication extends Application {
         DbIgnoreExecutor.init(getApplicationContext());
         DbHistoryExecutor.init(getApplicationContext());
         DataManager.init();
-        insertDefault();
+        addDefaultIgnoreAppsToDB();
         StatManager.initInstance(getApplicationContext());
     }
 
-    private void insertDefault() {
+    private void addDefaultIgnoreAppsToDB() {
         new Thread(new Runnable() {
             @Override
             public void run() {

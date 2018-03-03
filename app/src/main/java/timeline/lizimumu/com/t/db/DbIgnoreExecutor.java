@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timeline.lizimumu.com.t.data.AppItem;
+import timeline.lizimumu.com.t.data.IgnoreItem;
 
 /**
  * Database Entry
