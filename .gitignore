@@ -59,3 +59,4 @@ publish/
 
 # scripts
 release.sh
+install.sh
