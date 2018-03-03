@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about">About</string>
-    <string name="app_name">AppsTimeline</string>
+    <string name="app_name">AppsMonitor</string>
 
     <string name="close">Close</string>
 
@@ -24,6 +24,7 @@
     <string name="ignore_success">Move to ignore list successfully</string>
 
     <string name="more">More detail</string>
+    <string name="app_info">App info</string>
 
     <string name="notification_title">AppTimeline running</string>
     <string name="notification_message">monitoring your app usage</string>
@@ -39,7 +40,7 @@
     <string name="share">Like and share</string>
     <string name="share_desc">Hey check out this app, it\'s so cool, it can help checkout every app\'s time your spend on: %1$s%2$s</string>
     <string name="slogan">Monitor Apps usage</string>
-    <string name="sort">Sort</string>
+    <string name="sort">Sort By</string>
 
     <string name="toast_permission">Please find \"AppsTimeline\" and grant the permission</string>
     <string name="times">%1$s · %2$d times</string>

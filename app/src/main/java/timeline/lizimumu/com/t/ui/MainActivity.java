@@ -3,12 +3,15 @@ package timeline.lizimumu.com.t.ui;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Fade;
@@ -25,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -52,14 +56,17 @@ import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private LinearLayout mSort;
     private Switch mSwitch;
     private TextView mSwitchText;
     private RecyclerView mList;
     private MyAdapter mAdapter;
     private AlertDialog mDialog;
     private SwipeRefreshLayout mSwipe;
+    private TextView mSortName;
     private long mTotal;
     private int mDay;
+    private PackageManager mPackageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +75,26 @@ public class MainActivity extends AppCompatActivity {
         // https://guides.codepath.com/android/Shared-Element-Activity-Transition
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Fade(Fade.OUT));
-
         setContentView(R.layout.activity_main);
+        mPackageManager = getPackageManager();
 
+        mSort = findViewById(R.id.sort_group);
+        mSortName = findViewById(R.id.sort_name);
         mSwitch = findViewById(R.id.enable_switch);
         mSwitchText = findViewById(R.id.enable_text);
         mAdapter = new MyAdapter();
 
         mList = findViewById(R.id.list);
         mList.setLayoutManager(new LinearLayoutManager(this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mList.getContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider, getTheme()));
+        mList.addItemDecoration(dividerItemDecoration);
         mList.setAdapter(mAdapter);
 
         initLayout();
         initEvents();
         initSpinner();
+        initSort();
 
         if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             process();
@@ -96,12 +109,36 @@ public class MainActivity extends AppCompatActivity {
         if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             mSwitchText.setText(R.string.enable_apps_monitoring);
             mSwitch.setVisibility(View.GONE);
+            mSort.setVisibility(View.VISIBLE);
             mSwipe.setEnabled(true);
         } else {
             mSwitchText.setText(R.string.enable_apps_monitor);
             mSwitch.setVisibility(View.VISIBLE);
+            mSort.setVisibility(View.GONE);
             mSwitch.setChecked(false);
             mSwipe.setEnabled(false);
+        }
+    }
+
+    private void initSort() {
+        if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+            mSort.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDialog = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle(R.string.sort)
+                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
+                                    process();
+                                    mDialog.dismiss();
+                                }
+                            })
+                            .create();
+                    mDialog.show();
+                }
+            });
         }
     }
 
@@ -164,8 +201,10 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         if (DataManager.getInstance().hasPermission(this)) {
             mSwipe.setEnabled(true);
+            mSort.setVisibility(View.VISIBLE);
             mSwitch.setVisibility(View.GONE);
             initSpinner();
+            initSort();
             process();
         }
     }
@@ -173,17 +212,32 @@ public class MainActivity extends AppCompatActivity {
     private void process() {
         if (DataManager.getInstance().hasPermission(getApplicationContext())) {
             mList.setVisibility(View.INVISIBLE);
-            new MyAsyncTask().execute(PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), mDay);
+            int sortInt = PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT);
+            mSortName.setText(getSortName(sortInt));
+            new MyAsyncTask().execute(sortInt, mDay);
         }
+    }
+
+    private String getSortName(int sortInt) {
+        return getResources().getStringArray(R.array.sort)[sortInt];
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AppItem info = mAdapter.getItemInfoByPosition(item.getOrder());
         switch (item.getItemId()) {
             case R.id.ignore:
-                DbIgnoreExecutor.getInstance().insertItem(mAdapter.getItemInfoByPosition(item.getOrder()));
+                DbIgnoreExecutor.getInstance().insertItem(info);
                 process();
                 Toast.makeText(this, R.string.ignore_success, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.open:
+                startActivity(mPackageManager.getLaunchIntentForPackage(info.mPackageName));
+                return true;
+            case R.id.more:
+                Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + info.mPackageName));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -200,31 +254,27 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.refresh:
-                mAdapter.clear();
-                process();
-                return true;
             case R.id.settings:
                 startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
                 return true;
-            case R.id.sort:
-                if (DataManager.getInstance().hasPermission(getApplicationContext())) {
-                    mDialog = new AlertDialog.Builder(this)
-                            .setTitle(R.string.sort)
-                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-                                    process();
-                                    mDialog.dismiss();
-                                }
-                            })
-                            .create();
-                    mDialog.show();
-                    return true;
-                } else {
-                    return false;
-                }
+//            case R.id.sort:
+//                if (DataManager.getInstance().hasPermission(getApplicationContext())) {
+//                    mDialog = new AlertDialog.Builder(this)
+//                            .setTitle(R.string.sort)
+//                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
+//                                    process();
+//                                    mDialog.dismiss();
+//                                }
+//                            })
+//                            .create();
+//                    mDialog.show();
+//                    return true;
+//                } else {
+//                    return false;
+//                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -233,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(">>>>>>>>", "result code " + requestCode + " " + resultCode);
         if (resultCode > 0) process();
     }
 
@@ -338,7 +389,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-                contextMenu.add(0, R.id.ignore, getAdapterPosition(), getResources().getString(R.string.ignore));
+                int position = getAdapterPosition();
+                AppItem item = getItemInfoByPosition(position);
+                contextMenu.setHeaderTitle(item.mName);
+                contextMenu.add(Menu.NONE, R.id.open, position, getResources().getString(R.string.open));
+                if (item.mCanOpen) {
+                    contextMenu.add(Menu.NONE, R.id.more, position, getResources().getString(R.string.app_info));
+                }
+                contextMenu.add(Menu.NONE, R.id.ignore, position, getResources().getString(R.string.ignore));
             }
         }
     }
@@ -364,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
             for (AppItem item : appItems) {
                 if (item.mUsageTime <= 0) continue;
                 mTotal += item.mUsageTime;
+                item.mCanOpen = mPackageManager.getLaunchIntentForPackage(item.mPackageName) != null;
             }
             mSwitchText.setText(String.format(getResources().getString(R.string.total), AppUtil.formatMilliSeconds(mTotal)));
             mSwipe.setRefreshing(false);

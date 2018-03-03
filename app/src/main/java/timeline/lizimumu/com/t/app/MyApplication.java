@@ -11,7 +11,6 @@ import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
-import timeline.lizimumu.com.t.log.FileLogManager;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.PreferenceManager;
@@ -33,7 +32,6 @@ public class MyApplication extends Application {
         DataManager.init();
         insertDefault();
         StatManager.initInstance(getApplicationContext());
-        FileLogManager.init();
     }
 
     private void insertDefault() {

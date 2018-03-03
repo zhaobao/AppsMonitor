@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sort">
-        <item>Sort by total usage time</item>
-        <item>Sort by last usage time</item>
-        <item>Sort by total usage count</item>
-        <item>Sort by mobile data usage</item>
+        <item>Total</item>
+        <item>Date</item>
+        <item>Frequency</item>
+        <item>Traffic</item>
     </string-array>
     <string-array name="duration">
         <item>Today</item>

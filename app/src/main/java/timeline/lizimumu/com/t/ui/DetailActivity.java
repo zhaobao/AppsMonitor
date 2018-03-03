@@ -77,7 +77,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
-
         setContentView(R.layout.activity_detail);
 
         ActionBar actionBar = getSupportActionBar();
@@ -90,6 +89,9 @@ public class DetailActivity extends AppCompatActivity {
         if (intent != null) {
             mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
             mDay = intent.getIntExtra(EXTRA_DAY, 0);
+            // package name
+            TextView mPackage = findViewById(R.id.pkg_name);
+            mPackage.setText(mPackageName);
             // icon
             ImageView imageView = findViewById(R.id.icon);
             Drawable icon = AppUtil.getPackageIcon(this, mPackageName);

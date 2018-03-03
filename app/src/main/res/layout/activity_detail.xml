@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="140dp"
         android:background="@drawable/bg_detail_header"
         android:padding="16dp">
 
@@ -59,6 +59,16 @@
             android:text="@string/open"
             android:textColor="@android:color/white" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/pkg_name"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@drawable/bg_detail_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"

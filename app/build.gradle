@@ -6,8 +6,8 @@ android {
         applicationId "timeline.lizimumu.com.t"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 15
-        versionName "1.7.2"
+        versionCode 20
+        versionName "1.7.6"
     }
 
     signingConfigs {

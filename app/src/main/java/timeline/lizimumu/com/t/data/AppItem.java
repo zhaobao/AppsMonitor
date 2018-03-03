@@ -15,6 +15,7 @@ public class AppItem {
     public int mEventType;
     public int mCount;
     public long mMobile;
+    public boolean mCanOpen;
     private boolean mIsSystem;
 
     @Override

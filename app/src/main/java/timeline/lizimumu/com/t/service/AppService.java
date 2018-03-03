@@ -68,7 +68,11 @@ public class AppService extends Service {
 
     @Override
     public void onDestroy() {
-        startService(new Intent(mContext, AppService.class));
+        try {
+            startService(new Intent(mContext, AppService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void startIntervalCheck() {

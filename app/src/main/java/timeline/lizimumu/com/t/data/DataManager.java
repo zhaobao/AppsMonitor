@@ -274,6 +274,7 @@ public class DataManager {
                             NetworkStats.Bucket bucket = new NetworkStats.Bucket();
                             networkStatsM.getNextBucket(bucket);
                             String key = "u" + bucket.getUid();
+                            Log.d("******", key + " " + bucket.getTxBytes() + "");
                             if (result.containsKey(key)) {
                                 result.put(key, result.get(key) + bucket.getTxBytes() + bucket.getRxBytes());
                             } else {
@@ -284,6 +285,7 @@ public class DataManager {
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
+                Log.e(">>>>>", e.getMessage());
             }
         }
         return result;
