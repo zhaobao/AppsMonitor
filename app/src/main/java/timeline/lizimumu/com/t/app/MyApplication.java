@@ -6,6 +6,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
@@ -13,6 +14,7 @@ import timeline.lizimumu.com.t.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.stat.StatManager;
+import timeline.lizimumu.com.t.util.CrashHandler;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
 /**
@@ -32,6 +34,7 @@ public class MyApplication extends Application {
         DataManager.init();
         addDefaultIgnoreAppsToDB();
         StatManager.initInstance(getApplicationContext());
+        if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
     }
 
     private void addDefaultIgnoreAppsToDB() {

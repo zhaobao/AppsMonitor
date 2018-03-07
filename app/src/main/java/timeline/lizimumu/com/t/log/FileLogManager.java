@@ -20,13 +20,12 @@ public class FileLogManager {
     private static final String ALARM_LOG = "alarm.log";
     private static final String LOG_PATH = Environment.getExternalStorageDirectory() + File.separator + PATH_NAME;
     private static final String LOG_FILE = LOG_PATH + File.separator + ALARM_LOG;
-    private static FileLogManager mInstance;
+    private static FileLogManager mInstance = new FileLogManager();
 
     private FileLogManager() {
     }
 
     public static void init() {
-        mInstance = new FileLogManager();
         new Thread(new Runnable() {
             @Override
             public void run() {
