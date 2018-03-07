@@ -68,6 +68,7 @@ public class SplashActivity extends AppCompatActivity {
             String permission = permissions[i];
             if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                 FileLogManager.init();
+                break;
             }
         }
         delayEnter();

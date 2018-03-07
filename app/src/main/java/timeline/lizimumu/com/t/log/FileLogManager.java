@@ -30,7 +30,7 @@ public class FileLogManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mInstance._init();
+                mInstance.doPrepare();
             }
         }).run();
     }
@@ -39,7 +39,7 @@ public class FileLogManager {
         return mInstance;
     }
 
-    private void _init() {
+    private void doPrepare() {
         File d = new File(LOG_PATH);
         if (!d.exists()) {
             d.mkdirs();
@@ -56,7 +56,7 @@ public class FileLogManager {
 
     public void log(String message) {
 
-        _init();
+        doPrepare();
 
         FileOutputStream outputStream = null;
         PrintWriter writer = null;

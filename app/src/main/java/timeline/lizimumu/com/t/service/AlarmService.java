@@ -47,9 +47,7 @@ public class AlarmService extends IntentService {
         }
 
         FileLogManager fileLogManager = FileLogManager.getInstance();
-        if (fileLogManager != null) {
-            fileLogManager.log("alarm " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis())) + "\n");
-        }
+        fileLogManager.log("alarm " + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(System.currentTimeMillis())) + "\n");
 
         AlarmUtil.setAlarm(this.getApplicationContext());
     }
