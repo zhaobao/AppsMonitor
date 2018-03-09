@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +38,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private long mTotal;
     private int mDay;
     private PackageManager mPackageManager;
+    final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +107,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(">>>>ID", PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
+
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+        mFirebaseRemoteConfig.fetch(14400L).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    mFirebaseRemoteConfig.activateFetched();
+                }
+                displayWelcomeMessage();
+            }
+        });
+    }
+
+    private void displayWelcomeMessage() {
+        String email = mFirebaseRemoteConfig.getString("email");
+        Log.d(">>>FIRE BASE", email);
     }
 
     private void initLayout() {
