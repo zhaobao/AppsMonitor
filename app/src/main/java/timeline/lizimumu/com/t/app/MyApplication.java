@@ -3,6 +3,9 @@ package timeline.lizimumu.com.t.app;
 import android.app.Application;
 import android.content.Intent;
 
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.crashreport.CrashReport;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class MyApplication extends Application {
         addDefaultIgnoreAppsToDB();
         StatManager.initInstance(getApplicationContext());
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
+        Bugly.init(getApplicationContext(), "4a59b2abb6", true);
     }
 
     private void addDefaultIgnoreAppsToDB() {

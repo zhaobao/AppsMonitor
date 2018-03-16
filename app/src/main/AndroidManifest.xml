@@ -10,6 +10,14 @@
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- Bugly 权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
         android:name=".app.MyApplication"
         android:allowBackup="true"
@@ -86,6 +94,31 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
+
+        <!-- 配置APP ID -->
+        <meta-data android:name="BUGLY_APPID" android:value="4a59b2abb6" />
+        <!-- 配置APP版本号 -->
+        <meta-data android:name="BUGLY_APP_VERSION" android:value="1.0" />
+        <!-- 配置APP渠道号 -->
+        <meta-data android:name="BUGLY_APP_CHANNEL" android:value="gp" />
+        <!-- 配置Bugly调试模式（true或者false）-->
+        <meta-data android:name="BUGLY_ENABLE_DEBUG" android:value="true" />
+
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
     </application>
 
 </manifest>

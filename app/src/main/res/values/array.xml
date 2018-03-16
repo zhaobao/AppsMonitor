@@ -4,7 +4,7 @@
         <item>Total</item>
         <item>Date</item>
         <item>Frequency</item>
-        <item>Traffic</item>
+        <item>Mobile data</item>
     </string-array>
     <string-array name="duration">
         <item>Today</item>

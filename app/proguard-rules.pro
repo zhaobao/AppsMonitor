@@ -122,6 +122,11 @@
     public static <fields>;
 }
 
+# bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}
+
 # retrofit2
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
