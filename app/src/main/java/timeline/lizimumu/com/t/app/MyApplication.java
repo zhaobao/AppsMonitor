@@ -2,12 +2,15 @@ package timeline.lizimumu.com.t.app;
 
 import android.app.Application;
 import android.content.Intent;
+import android.util.Log;
 
+import com.appsflyer.AppsFlyerConversionListener;
+import com.appsflyer.AppsFlyerLib;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
@@ -38,7 +41,8 @@ public class MyApplication extends Application {
         addDefaultIgnoreAppsToDB();
         StatManager.initInstance(getApplicationContext());
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
-        Bugly.init(getApplicationContext(), "4a59b2abb6", true);
+        Bugly.init(getApplicationContext(), AppConst.BUGLY_KEY, true);
+        initAppsFlyer();
     }
 
     private void addDefaultIgnoreAppsToDB() {
@@ -56,5 +60,31 @@ public class MyApplication extends Application {
                 }
             }
         }).run();
+    }
+
+    private void initAppsFlyer() {
+        AppsFlyerConversionListener conversionDataListener = new AppsFlyerConversionListener() {
+            @Override
+            public void onInstallConversionDataLoaded(Map<String, String> map) {
+                Log.d(">>>", "onInstallConversionDataLoaded:" + map.toString());
+            }
+
+            @Override
+            public void onInstallConversionFailure(String s) {
+                Log.d(">>>", "onInstallConversionFailure:" + s);
+            }
+
+            @Override
+            public void onAppOpenAttribution(Map<String, String> map) {
+                Log.d(">>>", "onAppOpenAttribution:" + map.toString());
+            }
+
+            @Override
+            public void onAttributionFailure(String s) {
+                Log.d(">>>", "onAttributionFailure:" + s);
+            }
+        };
+        AppsFlyerLib.getInstance().init(AppConst.AF_KEY, conversionDataListener, getApplicationContext());
+        AppsFlyerLib.getInstance().startTracking(this);
     }
 }

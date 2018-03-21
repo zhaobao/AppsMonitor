@@ -133,6 +133,9 @@
 -keepattributes Signature
 -keepattributes Exceptions
 
+# apps flyer
+-dontwarn com.android.installreferrer
+
 # glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule

@@ -50,6 +50,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".ui.SettingsActivity"
             android:parentActivityName=".ui.MainActivity">
@@ -96,13 +104,21 @@
             android:resource="@color/colorAccent" />
 
         <!-- 配置APP ID -->
-        <meta-data android:name="BUGLY_APPID" android:value="4a59b2abb6" />
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="4a59b2abb6" />
         <!-- 配置APP版本号 -->
-        <meta-data android:name="BUGLY_APP_VERSION" android:value="1.0" />
+        <meta-data
+            android:name="BUGLY_APP_VERSION"
+            android:value="1.0" />
         <!-- 配置APP渠道号 -->
-        <meta-data android:name="BUGLY_APP_CHANNEL" android:value="gp" />
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="gp" />
         <!-- 配置Bugly调试模式（true或者false）-->
-        <meta-data android:name="BUGLY_ENABLE_DEBUG" android:value="true" />
+        <meta-data
+            android:name="BUGLY_ENABLE_DEBUG"
+            android:value="true" />
 
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
@@ -116,7 +132,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
     </application>
