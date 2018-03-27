@@ -5,4 +5,8 @@
         <key>email</key>
         <value>default email</value>
     </entry>
+    <entry>
+        <key>sort</key>
+        <value>1</value>
+    </entry>
 </defaultsMap>

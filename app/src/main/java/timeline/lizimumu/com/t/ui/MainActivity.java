@@ -40,6 +40,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.text.SimpleDateFormat;
@@ -48,6 +49,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import timeline.lizimumu.com.t.AppConst;
+import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
@@ -59,6 +62,9 @@ import timeline.lizimumu.com.t.util.AppUtil;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String SORT_TOP = "2";
+    private static final String SORT_BOTTOM = "1";
 
     private LinearLayout mSort;
     private Switch mSwitch;
@@ -106,23 +112,21 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, AlarmService.class));
         }
 
-        Log.d(">>>>ID", PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
+        Log.d("===> FCM ID", "" + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
+        Log.d("===> FIRE TOKEN", "" + FirebaseInstanceId.getInstance().getToken());
 
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-        mFirebaseRemoteConfig.fetch(14400L).addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
+        mFirebaseRemoteConfig.fetch(cacheTime).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     mFirebaseRemoteConfig.activateFetched();
+                    Log.d("===> FIRE BASE", "" + mFirebaseRemoteConfig.getString("email"));
+                    Log.d("===> FIRE BASE", "" + mFirebaseRemoteConfig.getString("sort"));
                 }
-                displayWelcomeMessage();
             }
         });
-    }
-
-    private void displayWelcomeMessage() {
-        String email = mFirebaseRemoteConfig.getString("email");
-        Log.d(">>>FIRE BASE", email);
     }
 
     private void initLayout() {
@@ -139,6 +143,10 @@ public class MainActivity extends AppCompatActivity {
             mSwitch.setChecked(false);
             mSwipe.setEnabled(false);
         }
+        String remoteSort = mFirebaseRemoteConfig.getString("sort");
+        if (remoteSort.equals(SORT_TOP)) {
+            mSort.setVisibility(View.GONE);
+        }
     }
 
     private void initSort() {
@@ -146,21 +154,25 @@ public class MainActivity extends AppCompatActivity {
             mSort.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mDialog = new AlertDialog.Builder(MainActivity.this)
-                            .setTitle(R.string.sort)
-                            .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
-                                    process();
-                                    mDialog.dismiss();
-                                }
-                            })
-                            .create();
-                    mDialog.show();
+                    triggerSort();
                 }
             });
         }
+    }
+
+    private void triggerSort() {
+        mDialog = new AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.sort)
+                .setSingleChoiceItems(R.array.sort, PreferenceManager.getInstance().getInt(PreferenceManager.PREF_LIST_SORT), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        PreferenceManager.getInstance().putInt(PreferenceManager.PREF_LIST_SORT, i);
+                        process();
+                        mDialog.dismiss();
+                    }
+                })
+                .create();
+        mDialog.show();
     }
 
     private void initSpinner() {
@@ -268,7 +280,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        String remoteSort = mFirebaseRemoteConfig.getString("sort");
+        if (remoteSort.equals(SORT_BOTTOM)) {
+            inflater.inflate(R.menu.main, menu);
+        } else if (remoteSort.equals(SORT_TOP)) {
+            inflater.inflate(R.menu.main_top, menu);
+        }
         return true;
     }
 
@@ -277,6 +294,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.settings:
                 startActivityForResult(new Intent(MainActivity.this, SettingsActivity.class), 1);
+                return true;
+            case R.id.sort:
+                triggerSort();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -41,7 +41,7 @@ public class MyApplication extends Application {
         addDefaultIgnoreAppsToDB();
         StatManager.initInstance(getApplicationContext());
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
-        Bugly.init(getApplicationContext(), AppConst.BUGLY_KEY, true);
+        Bugly.init(getApplicationContext(), AppConst.BUG_KEY, true);
         initAppsFlyer();
     }
 

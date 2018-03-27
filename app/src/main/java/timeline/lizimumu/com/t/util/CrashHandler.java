@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import timeline.lizimumu.com.t.AppConst;
+
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     private Thread.UncaughtExceptionHandler mDefaultHandler;
@@ -68,11 +70,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             try {
-                File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "666");
-                if (!dir.exists()) dir.mkdirs();
-                FileOutputStream fos = new FileOutputStream(new File(dir, fileName));
-                fos.write(sb.toString().getBytes());
-                fos.close();
+                File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + AppConst.LOG_DIR);
+                boolean ok = true;
+                if (!dir.exists()) {
+                    ok = dir.mkdirs();
+                }
+                if (ok) {
+                    FileOutputStream fos = new FileOutputStream(new File(dir, fileName));
+                    fos.write(sb.toString().getBytes());
+                    fos.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
