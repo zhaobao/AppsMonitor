@@ -114,15 +114,20 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, AlarmService.class));
         }
 
-        FileLogManager.getInstance().log("===> FCM ID " + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
-        FileLogManager.getInstance().log("===> FIRE TOKEN " + FirebaseInstanceId.getInstance().getToken());
+        initFirebase();
+    }
 
-        Log.d("===> FIRE TOKEN", "" + FirebaseInstanceId.getInstance().getToken());
+    private void initFirebase() {
 
-        FirebaseRemoteConfigSettings fsettings = new FirebaseRemoteConfigSettings.Builder()
+        Log.d("===> FIRE", "DEBUG=[" + BuildConfig.DEBUG + "]");
+        FileLogManager.getInstance().log("===> FCM ID=[" + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID) + "]");
+        FileLogManager.getInstance().log("===> FIRE TOKEN=[" + FirebaseInstanceId.getInstance().getToken() + "]");
+        Log.d("===> FIRE", "TOKEN=[" + FirebaseInstanceId.getInstance().getToken() + "]");
+
+        FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
                 .build();
-        mFirebaseRemoteConfig.setConfigSettings(fsettings);
+        mFirebaseRemoteConfig.setConfigSettings(settings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
         long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
@@ -131,11 +136,11 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     mFirebaseRemoteConfig.activateFetched();
-                    FileLogManager.getInstance().log("===> FIRE BASE sort=" + mFirebaseRemoteConfig.getString("sort"));
-                    FileLogManager.getInstance().log("===> FIRE BASE email=" + mFirebaseRemoteConfig.getString("email"));
-                    Log.d("===> FIRE BASE", "sort=" + mFirebaseRemoteConfig.getString("sort"));
+                    FileLogManager.getInstance().log("===> FIRE sort=" + mFirebaseRemoteConfig.getString("sort"));
+                    FileLogManager.getInstance().log("===> FIRE email=" + mFirebaseRemoteConfig.getString("email"));
+                    Log.d("===> FIRE", "SORT=[" + mFirebaseRemoteConfig.getString("sort") + "]");
                 } else {
-                    Log.d("===> FIRE ERROR", "E");
+                    Log.d("===> FIRE", "ERROR");
                 }
             }
         });

@@ -40,6 +40,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +71,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mTime;
     private String mPackageName;
     private TextView mData;
+    private ProgressBar mProgress;
     private int mDay;
 
     @Override
@@ -78,6 +80,8 @@ public class DetailActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setExitTransition(new Explode());
         setContentView(R.layout.activity_detail);
+
+        mProgress = findViewById(R.id.progressBar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -155,6 +159,7 @@ public class DetailActivity extends AppCompatActivity {
                         // ignore
                     }
                     mOpenButton.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                    mProgress.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
                 }
             });
         }
@@ -227,14 +232,15 @@ public class DetailActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
+        @NonNull
         @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.item_detail, parent, false);
             return new MyViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             AppItem item = mData.get(position);
             String desc = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime));
             if (item.mEventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
@@ -331,6 +337,7 @@ public class DetailActivity extends AppCompatActivity {
                     mData.setVisibility(View.GONE);
                 }
             }
+            mProgress.setVisibility(View.GONE);
         }
     }
 
