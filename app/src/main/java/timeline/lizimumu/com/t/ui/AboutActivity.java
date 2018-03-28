@@ -5,8 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.tencent.bugly.crashreport.CrashReport;
-
 import java.util.Locale;
 
 import timeline.lizimumu.com.t.BuildConfig;

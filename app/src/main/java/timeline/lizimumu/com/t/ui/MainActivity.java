@@ -56,6 +56,7 @@ import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
+import timeline.lizimumu.com.t.log.FileLogManager;
 import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
@@ -112,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, AlarmService.class));
         }
 
-        Log.d("===> FCM ID", "" + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
-        Log.d("===> FIRE TOKEN", "" + FirebaseInstanceId.getInstance().getToken());
+        FileLogManager.getInstance().log("===> FCM ID " + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
+        FileLogManager.getInstance().log("===> FIRE TOKEN " + FirebaseInstanceId.getInstance().getToken());
 
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
@@ -122,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     mFirebaseRemoteConfig.activateFetched();
-                    Log.d("===> FIRE BASE", "" + mFirebaseRemoteConfig.getString("email"));
-                    Log.d("===> FIRE BASE", "" + mFirebaseRemoteConfig.getString("sort"));
+                    FileLogManager.getInstance().log("===> FIRE BASE sort=" + mFirebaseRemoteConfig.getString("sort"));
+                    FileLogManager.getInstance().log("===> FIRE BASE email=" + mFirebaseRemoteConfig.getString("email"));
+                    Log.d("===> FIRE BASE", "sort=" + mFirebaseRemoteConfig.getString("sort"));
                 }
             }
         });
@@ -239,6 +241,11 @@ public class MainActivity extends AppCompatActivity {
             initSpinner();
             initSort();
             process();
+
+            String remoteSort = mFirebaseRemoteConfig.getString("sort");
+            if (remoteSort.equals(SORT_TOP)) {
+                mSort.setVisibility(View.GONE);
+            }
         }
     }
 

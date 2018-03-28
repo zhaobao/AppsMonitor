@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_detail_header"
         android:gravity="center_vertical"
+        android:minHeight="56dp"
         android:orientation="horizontal">
 
         <Spinner

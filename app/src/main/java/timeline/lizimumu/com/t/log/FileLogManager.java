@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import timeline.lizimumu.com.t.AppConst;
+
 /**
  * Log to file
  * Created by zb on 02/01/2018.
@@ -16,9 +18,8 @@ import java.io.PrintWriter;
 
 public class FileLogManager {
 
-    private static final String PATH_NAME = "666";
     private static final String ALARM_LOG = "alarm.log";
-    private static final String LOG_PATH = Environment.getExternalStorageDirectory() + File.separator + PATH_NAME;
+    private static final String LOG_PATH = Environment.getExternalStorageDirectory() + File.separator + AppConst.LOG_DIR;
     private static final String LOG_FILE = LOG_PATH + File.separator + ALARM_LOG;
     private static FileLogManager mInstance = new FileLogManager();
 
@@ -40,15 +41,21 @@ public class FileLogManager {
 
     private void doPrepare() {
         File d = new File(LOG_PATH);
+        boolean m = true;
         if (!d.exists()) {
-            d.mkdirs();
+            m = d.mkdirs();
         }
-        File f = new File(LOG_FILE);
-        if (!f.exists()) {
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (m) {
+            File f = new File(LOG_FILE);
+            if (!f.exists()) {
+                try {
+                    boolean c = f.createNewFile();
+                    if (!c) {
+                        System.err.println("create file error");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -56,6 +63,10 @@ public class FileLogManager {
     public void log(String message) {
 
         doPrepare();
+
+        if (!message.endsWith("\n")) {
+            message += "\n";
+        }
 
         FileOutputStream outputStream = null;
         PrintWriter writer = null;
