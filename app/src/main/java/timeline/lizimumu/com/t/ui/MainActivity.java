@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,7 +119,12 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("===> FIRE TOKEN", "" + FirebaseInstanceId.getInstance().getToken());
 
+        FirebaseRemoteConfigSettings fsettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(fsettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
         long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
         mFirebaseRemoteConfig.fetch(cacheTime).addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
@@ -128,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
                     FileLogManager.getInstance().log("===> FIRE BASE sort=" + mFirebaseRemoteConfig.getString("sort"));
                     FileLogManager.getInstance().log("===> FIRE BASE email=" + mFirebaseRemoteConfig.getString("email"));
                     Log.d("===> FIRE BASE", "sort=" + mFirebaseRemoteConfig.getString("sort"));
+                } else {
+                    Log.d("===> FIRE ERROR", "E");
                 }
             }
         });
