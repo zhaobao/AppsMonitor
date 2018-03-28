@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         FileLogManager.getInstance().log("===> FCM ID " + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID));
         FileLogManager.getInstance().log("===> FIRE TOKEN " + FirebaseInstanceId.getInstance().getToken());
 
+        Log.d("===> FIRE TOKEN", "" + FirebaseInstanceId.getInstance().getToken());
+
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
         long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
         mFirebaseRemoteConfig.fetch(cacheTime).addOnCompleteListener(this, new OnCompleteListener<Void>() {
