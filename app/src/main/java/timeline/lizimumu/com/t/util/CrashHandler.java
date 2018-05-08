@@ -1,6 +1,7 @@
 package timeline.lizimumu.com.t.util;
 
 import android.os.Environment;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,8 +16,8 @@ import timeline.lizimumu.com.t.AppConst;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
     private static CrashHandler INSTANCE = new CrashHandler();
+    private Thread.UncaughtExceptionHandler mDefaultHandler;
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
 
     private CrashHandler() {

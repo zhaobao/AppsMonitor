@@ -1,9 +1,5 @@
 package timeline.lizimumu.com.t;
 
-import android.os.Environment;
-
-import java.io.File;
-
 /**
  * AppConst
  * Created by zb on 18/12/2017.

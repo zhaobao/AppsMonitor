@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
-import com.tencent.bugly.Bugly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.db.DbHistoryExecutor;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
 import timeline.lizimumu.com.t.service.AppService;
-import timeline.lizimumu.com.t.stat.StatManager;
 import timeline.lizimumu.com.t.util.CrashHandler;
 import timeline.lizimumu.com.t.util.PreferenceManager;
 
@@ -39,9 +37,7 @@ public class MyApplication extends Application {
         DbHistoryExecutor.init(getApplicationContext());
         DataManager.init();
         addDefaultIgnoreAppsToDB();
-        StatManager.initInstance(getApplicationContext());
         if (AppConst.CRASH_TO_FILE) CrashHandler.getInstance().init();
-        Bugly.init(getApplicationContext(), AppConst.BUG_KEY, true);
         initAppsFlyer();
     }
 

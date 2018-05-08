@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -38,11 +37,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import timeline.lizimumu.com.t.AppConst;
 import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
@@ -65,9 +59,6 @@ import timeline.lizimumu.com.t.util.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SORT_TOP = "2";
-    private static final String SORT_BOTTOM = "1";
-
     private LinearLayout mSort;
     private Switch mSwitch;
     private TextView mSwitchText;
@@ -79,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     private long mTotal;
     private int mDay;
     private PackageManager mPackageManager;
-    final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,37 +103,6 @@ public class MainActivity extends AppCompatActivity {
             process();
             startService(new Intent(this, AlarmService.class));
         }
-
-        initFirebase();
-    }
-
-    private void initFirebase() {
-
-        Log.d("===> FIRE", "DEBUG=[" + BuildConfig.DEBUG + "]");
-        FileLogManager.getInstance().log("===> FCM ID=[" + PreferenceManager.getInstance().getString(PreferenceManager.FCM_ID) + "]");
-        FileLogManager.getInstance().log("===> FIRE TOKEN=[" + FirebaseInstanceId.getInstance().getToken() + "]");
-        Log.d("===> FIRE", "TOKEN=[" + FirebaseInstanceId.getInstance().getToken() + "]");
-
-        FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-        mFirebaseRemoteConfig.setConfigSettings(settings);
-        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
-
-        long cacheTime = BuildConfig.DEBUG ? 0L : AppConst.REMOTE_CONFIG_CACHE_TIME;
-        mFirebaseRemoteConfig.fetch(cacheTime).addOnCompleteListener(this, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    mFirebaseRemoteConfig.activateFetched();
-                    FileLogManager.getInstance().log("===> FIRE sort=" + mFirebaseRemoteConfig.getString("sort"));
-                    FileLogManager.getInstance().log("===> FIRE email=" + mFirebaseRemoteConfig.getString("email"));
-                    Log.d("===> FIRE", "SORT=[" + mFirebaseRemoteConfig.getString("sort") + "]");
-                } else {
-                    Log.d("===> FIRE", "ERROR");
-                }
-            }
-        });
     }
 
     private void initLayout() {
@@ -159,10 +118,6 @@ public class MainActivity extends AppCompatActivity {
             mSort.setVisibility(View.GONE);
             mSwitch.setChecked(false);
             mSwipe.setEnabled(false);
-        }
-        String remoteSort = mFirebaseRemoteConfig.getString("sort");
-        if (remoteSort.equals(SORT_TOP)) {
-            mSort.setVisibility(View.GONE);
         }
     }
 
@@ -256,11 +211,6 @@ public class MainActivity extends AppCompatActivity {
             initSpinner();
             initSort();
             process();
-
-            String remoteSort = mFirebaseRemoteConfig.getString("sort");
-            if (remoteSort.equals(SORT_TOP)) {
-                mSort.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -302,12 +252,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        String remoteSort = mFirebaseRemoteConfig.getString("sort");
-        if (remoteSort.equals(SORT_BOTTOM)) {
-            inflater.inflate(R.menu.main, menu);
-        } else if (remoteSort.equals(SORT_TOP)) {
-            inflater.inflate(R.menu.main_top, menu);
-        }
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
