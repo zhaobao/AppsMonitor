@@ -1,4 +1,4 @@
-# AppsTimeline
+# AppsMonitor
 Android apps for monitoring apps usage on your device
 
 ## What does this App do ?
