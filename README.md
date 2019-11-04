@@ -31,5 +31,8 @@ This app can:
 - To enjoy this apps, please grant app usage permission
 - You can usage this apps without any worry, since i will never collect your information
 
+## Feedback
+zhishoumowen@gmail.com
+
 ## Thanks
 ![MIT](https://img.shields.io/npm/l/vue.svg)
