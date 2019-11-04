@@ -37,7 +37,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,13 +44,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import timeline.lizimumu.com.t.BuildConfig;
 import timeline.lizimumu.com.t.GlideApp;
 import timeline.lizimumu.com.t.R;
 import timeline.lizimumu.com.t.data.AppItem;
 import timeline.lizimumu.com.t.data.DataManager;
 import timeline.lizimumu.com.t.db.DbIgnoreExecutor;
-import timeline.lizimumu.com.t.log.FileLogManager;
 import timeline.lizimumu.com.t.service.AlarmService;
 import timeline.lizimumu.com.t.service.AppService;
 import timeline.lizimumu.com.t.util.AppUtil;
@@ -316,11 +313,12 @@ public class MainActivity extends AppCompatActivity {
             holder.mName.setText(item.mName);
             holder.mUsage.setText(AppUtil.formatMilliSeconds(item.mUsageTime));
             holder.mTime.setText(String.format(Locale.getDefault(),
-                    "%s · %d %s · %s",
+                    "%s · %d %s",
                     new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault()).format(new Date(item.mEventTime)),
                     item.mCount,
-                    getResources().getString(R.string.times_only), AppUtil.humanReadableByteCount(item.mMobile))
+                    getResources().getString(R.string.times_only))
             );
+            holder.mDataUsage.setText(String.format(Locale.getDefault(), "%s", AppUtil.humanReadableByteCount(item.mMobile)));
             if (mTotal > 0) {
                 holder.mProgress.setProgress((int) (item.mUsageTime * 100 / mTotal));
             } else {
@@ -344,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
             private TextView mName;
             private TextView mUsage;
             private TextView mTime;
+            private TextView mDataUsage;
             private ImageView mIcon;
             private ProgressBar mProgress;
 
@@ -352,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
                 mName = itemView.findViewById(R.id.app_name);
                 mUsage = itemView.findViewById(R.id.app_usage);
                 mTime = itemView.findViewById(R.id.app_time);
+                mDataUsage = itemView.findViewById(R.id.app_data_usage);
                 mIcon = itemView.findViewById(R.id.app_image);
                 mProgress = itemView.findViewById(R.id.progressBar);
                 itemView.setOnCreateContextMenuListener(this);

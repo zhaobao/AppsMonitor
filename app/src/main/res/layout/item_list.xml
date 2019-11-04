@@ -37,6 +37,14 @@
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/app_data_usage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/app_name"
+        android:layout_below="@+id/app_time"
+        android:textSize="12sp" />
+
+    <TextView
         android:id="@+id/app_usage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,8 +58,8 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/app_name"
-        android:layout_below="@+id/app_time"
+        android:layout_alignStart="@+id/app_data_usage"
+        android:layout_below="@+id/app_data_usage"
         android:layout_marginTop="4dp"
         android:minHeight="4dp"
         android:progress="40"

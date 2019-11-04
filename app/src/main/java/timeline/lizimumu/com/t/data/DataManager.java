@@ -265,7 +265,7 @@ public class DataManager {
             NetworkStats networkStatsM;
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    networkStatsM = nsm.querySummary(ConnectivityManager.TYPE_MOBILE, tm.getSubscriberId(), range[0], range[1]);
+                    networkStatsM = nsm.querySummary(ConnectivityManager.TYPE_MOBILE, null, range[0], range[1]);
                     if (networkStatsM != null) {
                         while (networkStatsM.hasNextBucket()) {
                             NetworkStats.Bucket bucket = new NetworkStats.Bucket();
