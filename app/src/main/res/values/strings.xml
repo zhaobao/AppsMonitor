@@ -7,6 +7,7 @@
 
     <string name="detail">Details</string>
     <string name="duration">Duration</string>
+    <string name="sort_by">Sort</string>
 
     <string name="enable_apps_monitor">Enable apps monitor</string>
     <string name="enable_apps_monitoring">Apps monitoring</string>
